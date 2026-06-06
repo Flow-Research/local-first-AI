@@ -1,0 +1,506 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+2 0 obj
+<< /Length 1762 >>
+stream
+BT
+/F1 10 Tf
+50 742 Td
+14 TL
+/F1 16 Tf
+(Local-First AI Context Assistant: Project Structure Guide) Tj
+/F1 10 Tf
+0 -28 Td
+(Local-First AI Context Assistant: Project Structure Guide) Tj
+T*
+() Tj
+T*
+(Purpose Of This Guide) Tj
+T*
+() Tj
+T*
+(This guide explains how the repository is organized and why the structure supports) Tj
+T*
+(learning, research, design, building, verification, and fellowship collaboration.) Tj
+T*
+() Tj
+T*
+(The baseline is not designed so AI can do everything. It is designed so people can learn) Tj
+T*
+(while using AI responsibly as a helper.) Tj
+T*
+() Tj
+T*
+(Core Philosophy) Tj
+T*
+() Tj
+T*
+(The project follows one simple rule:) Tj
+T*
+() Tj
+T*
+(text) Tj
+T*
+(One week = one concept + one small output + one report.) Tj
+T*
+() Tj
+T*
+() Tj
+T*
+(Every week should produce evidence that a contributor learned something, made a design) Tj
+T*
+(choice, built or inspected something, and verified the result.) Tj
+T*
+() Tj
+T*
+(Why The Structure Creates Learning) Tj
+T*
+() Tj
+T*
+(The folder structure forces each contribution to pass through a learning loop:) Tj
+T*
+() Tj
+T*
+(text) Tj
+T*
+(Research | Design | Build | Verify | Document | Review | Merge to master) Tj
+T*
+() Tj
+T*
+() Tj
+T*
+(This means contributors are not only adding code. They are also building understanding.) Tj
+T*
+() Tj
+T*
+(The Role Of master) Tj
+T*
+() Tj
+T*
+(master is the clean baseline. It should always be stable enough for a new fellow to) Tj
+T*
+(branch from.) Tj
+T*
+() Tj
+T*
+(All work should happen on a branch:) Tj
+T*
+() Tj
+T*
+(text) Tj
+T*
+(master | feature/month-02-week-01-context-prep) Tj
+T*
+(research/month-05-crdt-sync) Tj
+T*
+(design/month-03-demo-flow) Tj
+T*
+(docs/fellowship-guide) Tj
+T*
+(experiment/month-08-network-exchange) Tj
+T*
+(fix/readme-links) Tj
+T*
+() Tj
+T*
+ET
+endstream
+endobj
+3 0 obj
+<< /Type /Page /Parent 12 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 1 0 R >> >> /Contents 2 0 R >>
+endobj
+4 0 obj
+<< /Length 2154 >>
+stream
+BT
+/F1 10 Tf
+50 742 Td
+14 TL
+() Tj
+T*
+(The branch returns to master only after learning, design, build output, and verification) Tj
+T*
+(evidence are documented.) Tj
+T*
+() Tj
+T*
+(Main Repository Areas) Tj
+T*
+() Tj
+T*
+(Area | Purpose | README.md | Short project front page | PROJECT_BRIEF.md | Stable) Tj
+T*
+(project purpose and scope | CONTRIBUTING.md | Fellowship rules for contribution | docs/) Tj
+T*
+(| Durable documentation and process guides | docs/roadmap.md | Full 12-month learning,) Tj
+T*
+(design, and build roadmap | reports/ | Weekly public learning journal | research/ |) Tj
+T*
+(Paper notes, reading lists, and learning logs | design/ | Design outcomes, sketches, and) Tj
+T*
+(decisions | features/ | Feature briefs and feature lifecycle notes | src/ | Code) Tj
+T*
+(implementation | benchmarks/ | Measurement scripts, results, and reports | assets/ |) Tj
+T*
+(Screenshots, diagrams, and evidence | tests/ | Automated checks | .github/ | Pull) Tj
+T*
+(request checklist | scripts/ | Local verification scripts | Reports Folder) Tj
+T*
+() Tj
+T*
+(The reports/ folder contains month-01 through month-12.) Tj
+T*
+() Tj
+T*
+(Each month has four weekly report files. This gives the fellowship a complete 48-week) Tj
+T*
+(learning path.) Tj
+T*
+() Tj
+T*
+(Weekly reports should include:) Tj
+T*
+(- Goal for the week.) Tj
+T*
+(- Research / learning.) Tj
+T*
+(- Design outcome.) Tj
+T*
+(- What was built.) Tj
+T*
+(- Files added or changed.) Tj
+T*
+(- Evidence.) Tj
+T*
+(- Problems or blockers.) Tj
+T*
+(- Next step.) Tj
+T*
+() Tj
+T*
+(Research Folder) Tj
+T*
+() Tj
+T*
+(The research/ folder keeps learning visible.) Tj
+T*
+() Tj
+T*
+(Folder | Purpose | research/paper-notes/ | Notes from papers and technical sources |) Tj
+T*
+(research/reading-lists/ | Monthly or topic-based reading lists | research/learning-logs/) Tj
+T*
+(| Human reflection on what was learned | Research notes should not only summarize a) Tj
+T*
+(paper. They should explain what the paper means for the project.) Tj
+T*
+() Tj
+T*
+(Design Folder) Tj
+T*
+() Tj
+T*
+(The design/ folder turns research into decisions.) Tj
+T*
+() Tj
+T*
+(Design outcomes should answer:) Tj
+T*
+(- What problem are we solving?) Tj
+T*
+ET
+endstream
+endobj
+5 0 obj
+<< /Type /Page /Parent 12 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 1 0 R >> >> /Contents 4 0 R >>
+endobj
+6 0 obj
+<< /Length 1538 >>
+stream
+BT
+/F1 10 Tf
+50 742 Td
+14 TL
+(- What options were considered?) Tj
+T*
+(- What did we choose?) Tj
+T*
+(- Why did we choose it?) Tj
+T*
+(- What evidence supports it?) Tj
+T*
+(- What risk remains?) Tj
+T*
+() Tj
+T*
+(This keeps design work visible and reviewable.) Tj
+T*
+() Tj
+T*
+(Features Folder) Tj
+T*
+() Tj
+T*
+(The features/ folder prevents feature work from becoming random.) Tj
+T*
+() Tj
+T*
+(Folder | Purpose | features/proposals/ | Ideas not started yet | features/active/ |) Tj
+T*
+(Feature briefs for work in progress | features/completed/ | Finished feature summaries |) Tj
+T*
+(Before coding a meaningful feature, contributors should write a feature brief.) Tj
+T*
+() Tj
+T*
+(Human Work And AI Assistance) Tj
+T*
+() Tj
+T*
+(AI may help with explanation, drafting, code suggestions, and review.) Tj
+T*
+() Tj
+T*
+(Humans remain responsible for:) Tj
+T*
+(- Reading and understanding.) Tj
+T*
+(- Deciding what matters.) Tj
+T*
+(- Reviewing AI output.) Tj
+T*
+(- Running checks.) Tj
+T*
+(- Explaining design choices.) Tj
+T*
+(- Recording evidence.) Tj
+T*
+() Tj
+T*
+(The fellowship should avoid commits where AI-generated content appears without human) Tj
+T*
+(understanding or review.) Tj
+T*
+() Tj
+T*
+(Verification Model) Tj
+T*
+() Tj
+T*
+(Verification has two layers.) Tj
+T*
+() Tj
+T*
+(Script Verification) Tj
+T*
+() Tj
+T*
+(Run:) Tj
+T*
+() Tj
+T*
+(powershell) Tj
+T*
+(powershell -ExecutionPolicy Bypass -File scripts/verify-contribution.ps1) Tj
+T*
+() Tj
+T*
+() Tj
+T*
+(The script checks:) Tj
+T*
+(- Required docs exist.) Tj
+T*
+(- All 12 report months exist.) Tj
+T*
+ET
+endstream
+endobj
+7 0 obj
+<< /Type /Page /Parent 12 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 1 0 R >> >> /Contents 6 0 R >>
+endobj
+8 0 obj
+<< /Length 1751 >>
+stream
+BT
+/F1 10 Tf
+50 742 Td
+14 TL
+(- Each month has 4 weekly reports.) Tj
+T*
+(- Reports contain research, design, and evidence sections.) Tj
+T*
+(- Contribution and pull request docs exist.) Tj
+T*
+() Tj
+T*
+(Human Verification) Tj
+T*
+() Tj
+T*
+(A reviewer should ask:) Tj
+T*
+(- Can the contributor explain the work?) Tj
+T*
+(- Is there evidence of learning?) Tj
+T*
+(- Is the design choice documented?) Tj
+T*
+(- Is AI assistance disclosed or reviewed?) Tj
+T*
+(- Does the weekly report show what changed?) Tj
+T*
+(- Can another fellow continue from this commit?) Tj
+T*
+() Tj
+T*
+(Pull Request Review) Tj
+T*
+() Tj
+T*
+(The pull request template requires:) Tj
+T*
+(- Branch from master.) Tj
+T*
+(- Weekly report update.) Tj
+T*
+(- Human learning evidence.) Tj
+T*
+(- Research note if a paper shaped the work.) Tj
+T*
+(- Design outcome if the architecture, data model, flow, or interface changed.) Tj
+T*
+(- Verification evidence.) Tj
+T*
+(- AI-use review.) Tj
+T*
+() Tj
+T*
+(This makes every merge teachable and reviewable.) Tj
+T*
+() Tj
+T*
+(How A Fellow Should Work Each Week) Tj
+T*
+() Tj
+T*
+(1. Start from master.) Tj
+T*
+(2. Create a focused branch.) Tj
+T*
+(3. Read the weekly paper or technical source.) Tj
+T*
+(4. Write a paper note or learning log.) Tj
+T*
+(5. Create a design outcome if a decision is needed.) Tj
+T*
+(6. Build the smallest useful output.) Tj
+T*
+(7. Verify it with a test, benchmark, screenshot, command output, or manual review.) Tj
+T*
+(8. Update the weekly report.) Tj
+T*
+(9. Run the verification script.) Tj
+T*
+(10. Open a pull request.) Tj
+T*
+(11. Review with another person.) Tj
+T*
+(12. Merge only when the work is understandable.) Tj
+T*
+() Tj
+T*
+(What Good Progress Looks Like) Tj
+T*
+() Tj
+T*
+(Good progress is not only code volume.) Tj
+T*
+() Tj
+T*
+ET
+endstream
+endobj
+9 0 obj
+<< /Type /Page /Parent 12 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 1 0 R >> >> /Contents 8 0 R >>
+endobj
+10 0 obj
+<< /Length 698 >>
+stream
+BT
+/F1 10 Tf
+50 742 Td
+14 TL
+(Good progress looks like:) Tj
+T*
+(- A small working artifact.) Tj
+T*
+(- A clear explanation.) Tj
+T*
+(- A learning note.) Tj
+T*
+(- A design decision.) Tj
+T*
+(- Verification evidence.) Tj
+T*
+(- Honest blockers.) Tj
+T*
+(- A next step.) Tj
+T*
+() Tj
+T*
+(Why This Baseline Matters) Tj
+T*
+() Tj
+T*
+(The baseline gives the fellowship a shared way to work.) Tj
+T*
+() Tj
+T*
+(It protects master, keeps learning visible, makes AI use accountable, and gives new) Tj
+T*
+(contributors a clear path into the project.) Tj
+T*
+() Tj
+T*
+(The structure is intentionally simple. It should help the project grow for 12 months) Tj
+T*
+(without needing major reorganization.) Tj
+T*
+() Tj
+T*
+ET
+endstream
+endobj
+11 0 obj
+<< /Type /Page /Parent 12 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 1 0 R >> >> /Contents 10 0 R >>
+endobj
+12 0 obj
+<< /Type /Pages /Kids [3 0 R 5 0 R 7 0 R 9 0 R 11 0 R] /Count 5 >>
+endobj
+13 0 obj
+<< /Type /Catalog /Pages 12 0 R >>
+endobj
+xref
+0 14
+0000000000 65535 f 
+0000000009 00000 n 
+0000000079 00000 n 
+0000001892 00000 n 
+0000002019 00000 n 
+0000004224 00000 n 
+0000004351 00000 n 
+0000005940 00000 n 
+0000006067 00000 n 
+0000007869 00000 n 
+0000007996 00000 n 
+0000008745 00000 n 
+0000008874 00000 n 
+0000008957 00000 n 
+trailer
+<< /Size 14 /Root 13 0 R >>
+startxref
+9008
+%%EOF

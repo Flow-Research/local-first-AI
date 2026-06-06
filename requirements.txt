@@ -1,0 +1,2 @@
+# Month 1 starts with the Python standard library.
+# Add dependencies here when the storage or AI workflow needs them.
