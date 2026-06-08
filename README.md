@@ -12,6 +12,10 @@ Current phase: Month 1 - Setup and Base Layer
 
 Build a simple local-first AI system that can work with local data before adding sync, benchmarking, and device-agent experiments.
 
+## Project Framing Diagram
+
+![Local-First AI Project Framing](assets/images/Local_First%20_AI.png)
+
 ## Key Documents
 
 | Document | Purpose |
