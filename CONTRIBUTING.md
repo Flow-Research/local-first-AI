@@ -4,9 +4,13 @@ This project is a fellowship-style learning project. The goal is not for AI to d
 
 ## Core Rule
 
-`master` is the clean baseline. Do not work directly on `master`.
+`master` is the evolving stable project branch. Do not work directly on `master`.
 
 Every meaningful contribution should happen on a branch created from `master`.
+
+New fellows who are starting at Week 1 should branch from `baseline/week-01-starter` instead of the current `master`.
+
+The tag `v0.1-week-01-baseline` marks the immutable Week 1 starter snapshot.
 
 ## Branch Naming
 
@@ -18,6 +22,14 @@ Every meaningful contribution should happen on a branch created from `master`.
 | Experiment | `experiment/month-XX-topic` | `experiment/month-08-network-exchange` |
 | Documentation | `docs/topic` | `docs/fellowship-guide` |
 | Fix | `fix/topic` | `fix/readme-links` |
+| Fellow Work | `fellows/<name>/week-XX` | `fellows/ada/week-01` |
+
+## New Fellow Start
+
+```bash
+git checkout baseline/week-01-starter
+git checkout -b fellows/<name>/week-01
+```
 
 ## Required Learning Evidence
 

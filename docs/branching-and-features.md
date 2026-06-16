@@ -2,9 +2,13 @@
 
 ## Branching Rule
 
-`master` is the clean baseline. Do not do active work directly on `master`.
+`master` is the evolving stable project branch. Do not do active work directly on `master`.
 
 Every project task should branch from `master`, stay small, and return to `master` only when the work is documented, reviewed, and safe to build on.
+
+The clean Week 1 starter baseline lives at `baseline/week-01-starter` and is also marked by the `v0.1-week-01-baseline` tag.
+
+New fellows who start from Week 1 should branch from `baseline/week-01-starter`, not from whatever `master` has become later in the fellowship.
 
 ## Branch Types
 
@@ -15,6 +19,7 @@ Every project task should branch from `master`, stay small, and return to `maste
 | `design/` | Architecture, flows, diagrams, and prototypes | `design/month-03-demo-storyboard` |
 | `experiment/` | Temporary technical trials | `experiment/month-08-network-exchange` |
 | `fix/` | Small corrections | `fix/readme-links` |
+| `fellows/` | Individual fellow learning branches | `fellows/ada/week-01` |
 | `docs/` | Documentation-only work | `docs/month-01-report-cleanup` |
 
 ## Feature Folder Flow

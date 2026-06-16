@@ -7,6 +7,7 @@
 | `README.md` | Short public overview and links to major docs |
 | `docs/roadmap.md` | Full 12-month roadmap and weekly plan |
 | `CONTRIBUTING.md` | Fellowship contribution rules and branch expectations |
+| `docs/baseline-start-guide.md` | How new fellows start from the Week 1 baseline |
 | `PROJECT_BRIEF.md` | Stable reason for the project |
 | `docs/architecture.md` | Current system architecture |
 | `docs/decisions.md` | Durable decisions and reasons |

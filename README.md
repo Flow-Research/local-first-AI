@@ -20,6 +20,7 @@ Build a simple local-first AI system that can work with local data before adding
 |---|---|
 | [Project Brief](PROJECT_BRIEF.md) | Stable project purpose, scope, and limits |
 | [Contributing Guide](CONTRIBUTING.md) | Fellowship rules for branching, learning evidence, and human review |
+| [Baseline Start Guide](docs/baseline-start-guide.md) | How new fellows start from the clean Week 1 baseline |
 | [Roadmap](docs/roadmap.md) | Full 12-month plan with weekly build, design, and learning outcomes |
 | [Fellowship Learning Model](docs/fellowship-learning-model.md) | How contributors learn while building with AI as a helper |
 | [Commit Verification](docs/commit-verification.md) | How commits are checked for learning, design, evidence, and review |
@@ -35,7 +36,9 @@ Plan -> Learn -> Build -> Test -> Report -> Commit -> Publish
 
 Use one simple rule: one week = one concept + one small output + one report.
 
-All active work branches from `master`. `master` stays clean and serves as the baseline for new feature, research, design, docs, experiment, and fix branches.
+All active project work branches from `master`. `master` stays clean and stable, but it keeps evolving as the shared project progresses.
+
+New fellows who need the original Week 1 starter state should branch from `baseline/week-01-starter` or the `v0.1-week-01-baseline` tag.
 
 Before a branch is merged, contributors should run:
 

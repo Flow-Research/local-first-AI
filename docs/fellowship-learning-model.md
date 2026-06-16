@@ -62,3 +62,21 @@ The project moves from simple to complex:
 12. Final review.
 
 This progression gives contributors enough structure to learn without being overwhelmed.
+
+## Joining Late
+
+A fellow can join even if the main group is already many weeks ahead.
+
+They should start from:
+
+```text
+baseline/week-01-starter
+```
+
+or the immutable tag:
+
+```text
+v0.1-week-01-baseline
+```
+
+This gives them the same Week 1 starting point as earlier fellows, while `master` continues to represent the stable shared project as it evolves.

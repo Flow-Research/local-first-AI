@@ -47,6 +47,19 @@ The script is not enough by itself. A reviewer should also check:
 - Does the report show what was difficult or uncertain?
 - Can another person continue from this commit?
 
+## Baseline Review
+
+`baseline/week-01-starter` is intended to remain stable. It should not receive normal weekly work.
+
+New work belongs on:
+
+- `fellows/<name>/week-XX`
+- `feature/month-XX-week-YY-topic`
+- `research/month-XX-topic`
+- `design/month-XX-topic`
+- `docs/topic`
+- `fix/topic`
+
 ## Good Commit Shape
 
 A good weekly commit usually touches several areas:
