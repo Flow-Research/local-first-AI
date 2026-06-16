@@ -20,6 +20,8 @@ The baseline branch and tag solve that:
 - `baseline/week-01-starter` remains the branch new fellows can start from.
 - `v0.1-week-01-baseline` marks the exact starter snapshot forever.
 
+Release notes live in [docs/releases/v0.1-week-01-baseline.md](releases/v0.1-week-01-baseline.md).
+
 ## New Fellow Workflow
 
 Clone the repository:
