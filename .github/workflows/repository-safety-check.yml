@@ -1,0 +1,32 @@
+name: Repository safety checks
+
+on:
+  pull_request:
+    branches:
+      - master
+  push:
+    branches:
+      - master
+
+permissions:
+  contents: read
+
+jobs:
+  repo-safety-check:
+    name: repo-safety-check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check README exists
+        run: test -f README.md
+
+      - name: Check for unresolved merge conflict markers
+        run: |
+          if grep -R -n -E '^(<<<<<<<|=======|>>>>>>>)' . --exclude-dir=.git; then
+            echo "Unresolved merge conflict marker found."
+            exit 1
+          fi
+          echo "No merge conflict markers found."
