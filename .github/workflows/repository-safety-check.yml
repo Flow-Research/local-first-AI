@@ -1,31 +1,90 @@
-name: Repository safety checks
+name: Fellow contribution checks
 
 on:
-  pull_request:
-    branches:
-      - master
+  # Check work while it is still on a fellow's branch.
   push:
     branches:
-      - master
+      - "fellows/**"
+
+  # A fellow branch must merge into its matching weekly branch.
+  pull_request:
+    branches:
+      - "weeks/**"
+    types: [opened, synchronize, reopened, ready_for_review]
 
 permissions:
   contents: read
 
+concurrency:
+  group: fellow-check-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  repo-safety-check:
-    name: repo-safety-check
+  fellow-contribution-check:
+    # Ignore PRs into weeks/** when the source is not a fellow branch.
+    if: github.event_name == 'push' || startsWith(github.head_ref, 'fellows/')
+    name: fellow-contribution-check
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
+          fetch-depth: 0
           persist-credentials: false
 
-      - name: Check README exists
-        run: test -f README.md
+      - name: Validate fellow branch name
+        shell: bash
+        env:
+          BRANCH_NAME: ${{ github.event_name == 'pull_request' && github.head_ref || github.ref_name }}
+        run: |
+          pattern='^fellows/[a-z0-9]+(-[a-z0-9]+)*/month-(0[1-9]|1[0-2])-week-0[1-4]-[a-z0-9]+(-[a-z0-9]+)*$'
+          if [[ ! "$BRANCH_NAME" =~ $pattern ]]; then
+            echo "Invalid fellow branch: $BRANCH_NAME"
+            echo "Use: fellows/<github-username>/month-XX-week-YY-<topic>"
+            exit 1
+          fi
+
+      - name: Validate weekly pull request target
+        if: github.event_name == 'pull_request'
+        shell: bash
+        env:
+          HEAD_BRANCH: ${{ github.head_ref }}
+          BASE_BRANCH: ${{ github.base_ref }}
+        run: |
+          fellow_week=$(echo "$HEAD_BRANCH" | sed -E 's#^fellows/[^/]+/(month-[0-9]{2}-week-[0-9]{2})-.*$#\1#')
+          expected_base="weeks/$fellow_week"
+
+          if [[ "$BASE_BRANCH" != "$expected_base" ]]; then
+            echo "This fellow branch must target: $expected_base"
+            echo "Current pull request target: $BASE_BRANCH"
+            exit 1
+          fi
+
+      - name: Require the matching weekly report
+        if: github.event_name == 'pull_request'
+        shell: bash
+        env:
+          HEAD_BRANCH: ${{ github.head_ref }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          month=$(echo "$HEAD_BRANCH" | sed -E 's#^fellows/[^/]+/month-([0-9]{2})-week-[0-9]{2}-.*$#\1#')
+          week=$(echo "$HEAD_BRANCH" | sed -E 's#^fellows/[^/]+/month-[0-9]{2}-week-([0-9]{2})-.*$#\1#')
+          report_pattern="^reports/month-${month}/week-${week}.*\.md$"
+
+          if ! git diff --name-only "$BASE_SHA" "$HEAD_SHA" | grep -Eq "$report_pattern"; then
+            echo "Update the shared report for Month $month, Week $week."
+            echo "Expected a changed file matching: reports/month-${month}/week-${week}*.md"
+            exit 1
+          fi
+
+      - name: Verify contribution structure
+        shell: pwsh
+        run: ./scripts/verify-contribution.ps1
 
       - name: Check for unresolved merge conflict markers
+        shell: bash
         run: |
           if grep -R -n -E '^(<<<<<<<|=======|>>>>>>>)' . --exclude-dir=.git; then
             echo "Unresolved merge conflict marker found."

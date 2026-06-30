@@ -2,7 +2,8 @@
 
 ## Branch
 
-- [ ] This branch was created from the latest `master`.
+- [ ] My branch follows `fellows/<github-username>/month-XX-week-YY-<topic>`.
+- [ ] My branch was created from and targets the matching `weeks/month-XX-week-YY` branch.
 - [ ] This work is scoped to one feature, research task, design task, documentation task, experiment, or fix.
 
 ## Human Learning

@@ -34,8 +34,10 @@ The script checks that:
 - Core docs exist.
 - All 12 report months exist.
 - Each report month has 4 weekly reports.
-- Weekly reports include research, design, and evidence sections.
+- Weekly reports use the short fellow format or the preserved legacy format.
 - Contribution and pull request documents exist.
+
+The GitHub Action runs only for pushes to `fellows/**` and pull requests into `weeks/**`. For a pull request, it also checks that the fellow branch targets the matching month and week and changes that week's shared report.
 
 ## Human Review
 
@@ -54,6 +56,7 @@ The script is not enough by itself. A reviewer should also check:
 New work belongs on:
 
 - `fellows/<github-username>/month-XX-week-YY-<topic>`
+- `weeks/month-XX-week-YY` for reviewed weekly integration
 - `feature/month-XX-week-YY-topic`
 - `research/month-XX-topic`
 - `design/month-XX-topic`

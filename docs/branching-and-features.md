@@ -4,7 +4,13 @@
 
 `master` is the evolving stable project branch. Do not do active work directly on `master`.
 
-Every project task should branch from `master`, stay small, and return to `master` only when the work is documented, reviewed, and safe to build on.
+Create one integration branch for the active week from `master`. Each fellow branches from that weekly branch, stays small, and merges back into the same weekly branch after review.
+
+```text
+fellows/<github-username>/month-XX-week-YY-<topic>
+        -> weeks/month-XX-week-YY
+        -> master
+```
 
 The clean Week 1 starter baseline lives at `baseline/week-01-starter` and is also marked by the `v0.1-week-01-baseline` tag.
 
@@ -20,6 +26,7 @@ New fellows who start from Week 1 should branch from `baseline/week-01-starter`,
 | `experiment/` | Temporary technical trials | `experiment/month-08-network-exchange` |
 | `fix/` | Small corrections | `fix/readme-links` |
 | `fellows/` | Individual fellow learning branches | `fellows/ada/month-03-week-02-sync-test` |
+| `weeks/` | Reviewed weekly integration branches | `weeks/month-03-week-02` |
 | `docs/` | Documentation-only work | `docs/month-01-report-cleanup` |
 
 ## Feature Folder Flow
@@ -34,20 +41,22 @@ Use `features/` to keep feature thinking separate from final code.
 
 ## Recommended Feature Lifecycle
 
-1. Branch from `master`.
+1. Branch from the matching `weeks/month-XX-week-YY` branch.
 2. Create a feature brief in `features/active/`.
 3. Add research notes in `research/paper-notes/` if the work depends on a paper or technical source.
 4. Add design outcomes in `design/outcomes/`.
 5. Implement the smallest useful code change in `src/`.
 6. Add tests, benchmark evidence, screenshots, or command output.
 7. Fill in your named fellow block in the existing weekly report.
-8. Merge back to `master` only when the branch is coherent and documented.
+8. Open a pull request into the matching weekly branch.
+9. Merge the weekly branch into `master` after all fellow contributions are reviewed together.
 
 ## Merge Checklist
 
 | Check | Required? |
 |---|---|
-| Branch started from latest `master` | Yes |
+| Fellow branch started from the matching weekly branch | Yes |
+| Pull request targets the matching weekly branch | Yes |
 | Weekly report updated | Yes |
 | Human learning log added when learning happened | Yes |
 | Design outcome added when UI, flow, architecture, or data model changed | Yes |
