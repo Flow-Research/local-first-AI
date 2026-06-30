@@ -40,7 +40,7 @@ Use `features/` to keep feature thinking separate from final code.
 4. Add design outcomes in `design/outcomes/`.
 5. Implement the smallest useful code change in `src/`.
 6. Add tests, benchmark evidence, screenshots, or command output.
-7. Add your own `week-YY-fellow-<github-username>.md` report.
+7. Fill in your named fellow block in the existing weekly report.
 8. Merge back to `master` only when the branch is coherent and documented.
 
 ## Merge Checklist

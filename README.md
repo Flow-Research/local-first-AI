@@ -55,8 +55,8 @@ The verification script checks the baseline structure, but human review is still
 | `PROJECT_BRIEF.md` | Why the project exists and what is in scope |
 | `docs/roadmap.md` | The progressive 12-month roadmap |
 | `docs/` | Architecture notes, benchmarking notes, compute targets, and decisions |
-| `reports/` | Project week overviews and independently mergeable fellow updates |
-| `reports/month-01` to `reports/month-12` | Monthly folders containing week overviews and each fellow's short update |
+| `reports/` | One shared report per week with a short named block for each fellow |
+| `reports/month-01` to `reports/month-12` | Monthly folders containing four weekly reports |
 | `research/` | Paper notes, reading lists, and learning evidence |
 | `research/learning-logs/` | Human learning reflections and AI-use notes |
 | `design/` | Design outcomes, sketches, flows, and decision artifacts |

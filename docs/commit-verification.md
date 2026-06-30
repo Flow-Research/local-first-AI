@@ -33,7 +33,7 @@ The script checks that:
 
 - Core docs exist.
 - All 12 report months exist.
-- Each report month has 4 project week overviews and may also contain one independently mergeable update per fellow per week.
+- Each report month has 4 weekly reports.
 - Weekly reports include research, design, and evidence sections.
 - Contribution and pull request documents exist.
 
@@ -65,7 +65,7 @@ New work belongs on:
 A good weekly commit usually touches several areas:
 
 ```text
-reports/month-XX/week-YY-fellow-<github-username>.md
+reports/month-XX/week-YY.md
 research/paper-notes/...
 design/outcomes/...
 features/active or features/completed/...

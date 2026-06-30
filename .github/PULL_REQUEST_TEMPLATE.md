@@ -8,7 +8,7 @@
 ## Human Learning
 
 - [ ] I can explain what changed without relying only on AI output.
-- [ ] I added my own `week-YY-fellow-<github-username>.md` report.
+- [ ] I filled in my named block in the existing weekly report.
 - [ ] I added a human learning log if this work involved learning.
 - [ ] I added a paper note if a paper or technical source shaped the work.
 
@@ -21,8 +21,7 @@
 ## Verification
 
 - [ ] I ran the relevant tests, script, benchmark, or manual check.
-- [ ] I linked my commits or pull request in my fellow report.
-- [ ] I linked my public post in my fellow report.
+- [ ] I included my topic, completed work, and public-output link.
 - [ ] I recorded verification in benchmark results, screenshots, tests, command output, or notes.
 - [ ] I ran `scripts/verify-contribution.ps1`.
 

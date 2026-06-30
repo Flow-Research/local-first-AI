@@ -1,24 +1,15 @@
-# Fellow Weekly Update
+# Month XX Week YY: Weekly Report
 
-- **Fellow:** Your name
-- **GitHub username:** `your-username`
-- **Week:** Month XX, Week YY
-- **Topic:** Short topic name
+Add one block for every fellow who contributed. Keep each block short.
 
-## What I Did
+## Fellow 1: Full Name
 
-- Describe the main contribution.
-- Add another result only if needed.
+- **Topic:** Topic worked on
+- **What I did:** One or two sentences describing the completed work
+- **Public output:** [Post title](https://example.com/post) - Medium, X, LinkedIn, or another public platform
 
-## Commits
+## Fellow 2: Full Name
 
-- [Short commit description](https://github.com/OWNER/REPOSITORY/commit/COMMIT_SHA)
-- **Pull request:** [PR #](https://github.com/OWNER/REPOSITORY/pull/PR_NUMBER)
-
-## Public Post
-
-- [Post title](https://example.com/post) — Medium, X, LinkedIn, or another public platform
-
-## Blocker or Next Step
-
-One short sentence. Write `None` if there is no blocker or next step.
+- **Topic:** Topic worked on
+- **What I did:** One or two sentences describing the completed work
+- **Public output:** [Post title](https://example.com/post) - Medium, X, LinkedIn, or another public platform

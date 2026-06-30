@@ -16,7 +16,7 @@
 | `docs/commit-verification.md` | What must be verified before merge |
 | `docs/branching-and-features.md` | Branch and feature workflow |
 | `docs/research-and-design-architecture.md` | Research, design, build, and documentation loop |
-| `reports/` | Project week overviews and short, independently mergeable fellow updates |
+| `reports/` | One shared report per week with a short block for each fellow |
 | `research/paper-notes/` | Notes from papers and technical sources |
 | `research/learning-logs/` | Human learning reflections |
 | `design/outcomes/` | Design decisions, sketches, and outcomes |
@@ -45,19 +45,19 @@ The question is not only "Did the code change?" The better question is:
 
 ## Fellow Weekly Update
 
-Each fellow creates their own file:
+Each week uses one existing report:
 
 ```text
-reports/month-XX/week-YY-fellow-<github-username>.md
+reports/month-XX/week-YY.md
 ```
 
-Copy `docs/templates/weekly-report-template.md` and keep the update short. It only needs the fellow's name, topic, what they did, commit or pull request links, a public-post link, and one blocker or next step.
+Each contributor fills in a numbered block such as `Fellow 1: Full Name`. Keep it short: add only the topic, what the fellow did, and a link to their public output.
 
-Do not combine several fellows in one editable file. The files with the same `month-XX` and `week-YY` form that week's report, while keeping each person's branch and commits easy to review.
+Only edit your own fellow block. Git records the contribution through the commit on your branch.
 
 ## Multi-Language Documentation Rule
 
-When work introduces Python, C, C++, or Rust code, the weekly report should say:
+Keep the weekly report short even when work introduces Python, C, C++, or Rust. Put details such as the following in the relevant feature brief, design outcome, test, or learning log:
 
 - Why that language was chosen for the task.
 - How the code was run or checked.

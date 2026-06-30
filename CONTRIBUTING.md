@@ -35,15 +35,15 @@ git checkout -b fellows/<github-username>/month-01-week-01-setup
 
 Every weekly branch should include:
 
-- A short fellow report named `reports/month-XX/week-YY-fellow-<github-username>.md`.
+- A short named block in the existing `reports/month-XX/week-YY.md` report.
 - A human learning log in `research/learning-logs/` when the work involved learning.
 - A paper note in `research/paper-notes/` when a paper or technical source influenced the work.
 - A design outcome in `design/outcomes/` when a design, architecture, flow, or data model changed.
 - A feature brief in `features/active/` or `features/completed/` when a feature was planned or finished.
-- Links to the fellow's commits or pull request and public post in the fellow report.
+- A link to the fellow's public post in the weekly report.
 - Evidence of verification in benchmark output, screenshots, tests, command output, or the pull request.
 
-Copy `docs/templates/weekly-report-template.md` to create the report. Each fellow owns one file per week, so branches can merge without several people changing the same document. See `reports/README.md` for the naming rule.
+Each fellow edits only their numbered block, such as `Fellow 1: Ada`. The block contains the fellow's topic, what they did, and their public-output link. See `reports/README.md` for the format.
 
 ## Human Work And AI Assistance
 

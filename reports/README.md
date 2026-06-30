@@ -1,21 +1,25 @@
-# Fellow Weekly Reports
+# Weekly Reports
 
-Each fellow adds one small report file for each week they contribute. Separate files make individual work and commits easy to review and prevent fellows from editing the same report file.
+The repository has one shared report for each week:
+
+```text
+reports/month-XX/week-YY.md
+```
+
+Some Month 1 filenames also include the week's topic. Use the existing file for the correct month and week instead of creating another report.
 
 ## Add Your Update
 
-1. Copy `docs/templates/weekly-report-template.md`.
-2. Save it as:
+Add or fill in one numbered fellow block:
 
-   ```text
-   reports/month-XX/week-YY-fellow-<github-username>.md
-   ```
+```markdown
+## Fellow 1: Full Name
 
-   Example: `reports/month-03/week-02-fellow-ada.md`
+- **Topic:** Topic worked on
+- **What I did:** One or two sentences describing the completed work
+- **Public output:** [Post title](https://example.com/post) - Medium, X, LinkedIn, or another public platform
+```
 
-3. Fill in what you did, links to your commits or pull request, and a link to your public post.
-4. Commit only your own weekly file with the work from your branch.
+Use the next available number, such as `Fellow 2` or `Fellow 3`. Only edit your own block. Your branch commit will show who added the update.
 
-Use lowercase letters, numbers, and hyphens in the GitHub username part of the filename. Do not edit another fellow's report.
-
-The existing weekly files without `-fellow-` in their names are project week overviews. Fellow updates sit beside them and together form the report for that week.
+The report intentionally asks for only the fellow's name, topic, completed work, and public-output link.

@@ -81,7 +81,7 @@ The branch returns to `master` only after learning, design, build output, and ve
 
 The `reports/` folder contains `month-01` through `month-12`.
 
-Each month has four project week overview files. Fellows add their own `week-YY-fellow-<github-username>.md` updates beside the overview, making individual contributions easy to review and merge.
+Each month has four weekly report files. Every fellow adds a short named block to the relevant shared report.
 
 Weekly reports should include:
 
