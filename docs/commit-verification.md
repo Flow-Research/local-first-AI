@@ -6,13 +6,15 @@ The project uses verification to make sure commits show real learning, design, a
 
 Verification does not mean the project is perfect. It means each contribution leaves enough evidence for another person to understand and review it.
 
-## Required Evidence By Work Type
+## Supporting Evidence By Work Type
+
+The shared weekly report is the only documentation file fellows must update. The items below are examples of useful supporting evidence when they are relevant to the assigned task; they are not mandatory extra documentation.
 
 | Work Type | Required Evidence |
 |---|---|
 | Research | Paper note, source link, human summary, project implication |
 | Design | Design outcome, options considered, chosen direction, risk |
-| Feature | Feature brief, code change, verification evidence, weekly report |
+| Feature | Code change, verification evidence, weekly report |
 | Benchmark | Runner or method, result file, interpretation note |
 | Documentation | Updated doc, reason for change, reviewer-readable explanation |
 | Experiment | Hypothesis, method, result, decision on whether to continue |

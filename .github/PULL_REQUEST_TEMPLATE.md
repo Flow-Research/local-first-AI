@@ -10,19 +10,12 @@
 
 - [ ] I can explain what changed without relying only on AI output.
 - [ ] I filled in my named block in the existing weekly report.
-- [ ] I added a human learning log if this work involved learning.
-- [ ] I added a paper note if a paper or technical source shaped the work.
-
-## Design And Research
-
-- [ ] I added a design outcome if the work changed architecture, flow, data model, interface, or evaluation approach.
-- [ ] I linked the relevant paper, article, official documentation, or technical source.
-- [ ] I explained the design decision and alternatives considered.
+- [ ] I included exactly five sentences describing what I did.
+- [ ] I included my topic and public-output link.
 
 ## Verification
 
 - [ ] I ran the relevant tests, script, benchmark, or manual check.
-- [ ] I included my topic, completed work, and public-output link.
 - [ ] I recorded verification in benchmark results, screenshots, tests, command output, or notes.
 - [ ] I ran `scripts/verify-contribution.ps1`.
 

@@ -42,14 +42,13 @@ Use `features/` to keep feature thinking separate from final code.
 ## Recommended Feature Lifecycle
 
 1. Branch from the matching `weeks/month-XX-week-YY` branch.
-2. Create a feature brief in `features/active/`.
-3. Add research notes in `research/paper-notes/` if the work depends on a paper or technical source.
-4. Add design outcomes in `design/outcomes/`.
-5. Implement the smallest useful code change in `src/`.
-6. Add tests, benchmark evidence, screenshots, or command output.
-7. Fill in your named fellow block in the existing weekly report.
-8. Open a pull request into the matching weekly branch.
-9. Merge the weekly branch into `master` after all fellow contributions are reviewed together.
+2. Implement the assigned work in the relevant project files.
+3. Add or run the relevant verification.
+4. Fill in your named block in the existing weekly report using exactly five sentences.
+5. Open a pull request into the matching weekly branch.
+6. Merge the weekly branch into `master` after all fellow contributions are reviewed together.
+
+The weekly report is the only required documentation file. Research notes, design outcomes, learning logs, and feature briefs are optional unless the assigned task specifically requires one.
 
 ## Merge Checklist
 
@@ -58,9 +57,7 @@ Use `features/` to keep feature thinking separate from final code.
 | Fellow branch started from the matching weekly branch | Yes |
 | Pull request targets the matching weekly branch | Yes |
 | Weekly report updated | Yes |
-| Human learning log added when learning happened | Yes |
-| Design outcome added when UI, flow, architecture, or data model changed | Yes |
-| Research note added when a paper influenced the work | Yes |
+| Fellow block contains name, topic, five sentences, and public-output link | Yes |
 | Tests or manual verification recorded | Yes |
 | README changed only when the public project overview changed | Yes |
 

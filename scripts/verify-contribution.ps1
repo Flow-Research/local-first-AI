@@ -50,7 +50,12 @@ foreach ($report in $weeklyReports) {
     $text = Get-Content -Path $report.FullName -Raw
     $usesFellowFormat = $text -match "## Fellow \d+:" -and
         $text -match "\*\*Topic:\*\*" -and
-        $text -match "\*\*What I did:\*\*" -and
+        $text -match "\*\*What I did \(five sentences\):\*\*" -and
+        $text -match "(?m)^\s+1\.\s+" -and
+        $text -match "(?m)^\s+2\.\s+" -and
+        $text -match "(?m)^\s+3\.\s+" -and
+        $text -match "(?m)^\s+4\.\s+" -and
+        $text -match "(?m)^\s+5\.\s+" -and
         $text -match "\*\*Public output:\*\*"
     $usesLegacyFormat = $text -match "Research / Learning" -and
         $text -match "Design Outcome" -and

@@ -48,19 +48,16 @@ git switch -c fellows/ada/month-03-week-02-sync-test
 
 Push the fellow branch and open its pull request against `weeks/month-03-week-02`, not `master`. The GitHub Action checks the fellow branch name, matching weekly target, weekly report update, repository structure, and unresolved conflict markers.
 
-## Required Learning Evidence
+## Required Weekly Documentation
 
-Every weekly branch should include:
+The shared weekly report is the only documentation file every fellow must modify. Each fellow adds:
 
 - A short named block in the existing `reports/month-XX/week-YY.md` report.
-- A human learning log in `research/learning-logs/` when the work involved learning.
-- A paper note in `research/paper-notes/` when a paper or technical source influenced the work.
-- A design outcome in `design/outcomes/` when a design, architecture, flow, or data model changed.
-- A feature brief in `features/active/` or `features/completed/` when a feature was planned or finished.
+- The topic they worked on.
+- Exactly five sentences explaining what they did.
 - A link to the fellow's public post in the weekly report.
-- Evidence of verification in benchmark output, screenshots, tests, command output, or the pull request.
 
-Each fellow edits only their numbered block, such as `Fellow 1: Ada`. The block contains the fellow's topic, what they did, and their public-output link. See `reports/README.md` for the format.
+Each fellow edits only their numbered block, such as `Fellow 1: Ada`. Separate learning logs, paper notes, design outcomes, and feature briefs are not required unless the assigned task specifically asks for them. Code, tests, or other project files may still change when needed to complete the work. See `reports/README.md` for the report format.
 
 ## Human Work And AI Assistance
 
