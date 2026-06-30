@@ -16,7 +16,7 @@
 | `docs/commit-verification.md` | What must be verified before merge |
 | `docs/branching-and-features.md` | Branch and feature workflow |
 | `docs/research-and-design-architecture.md` | Research, design, build, and documentation loop |
-| `reports/` | Weekly learning journal |
+| `reports/` | Project week overviews and short, independently mergeable fellow updates |
 | `research/paper-notes/` | Notes from papers and technical sources |
 | `research/learning-logs/` | Human learning reflections |
 | `design/outcomes/` | Design decisions, sketches, and outcomes |
@@ -42,6 +42,18 @@ Every meaningful branch should leave behind evidence of human learning. This can
 The question is not only "Did the code change?" The better question is:
 
 > Can another fellow understand what was learned, what was decided, what was built, and what was verified?
+
+## Fellow Weekly Update
+
+Each fellow creates their own file:
+
+```text
+reports/month-XX/week-YY-fellow-<github-username>.md
+```
+
+Copy `docs/templates/weekly-report-template.md` and keep the update short. It only needs the fellow's name, topic, what they did, commit or pull request links, a public-post link, and one blocker or next step.
+
+Do not combine several fellows in one editable file. The files with the same `month-XX` and `week-YY` form that week's report, while keeping each person's branch and commits easy to review.
 
 ## Multi-Language Documentation Rule
 

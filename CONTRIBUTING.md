@@ -22,25 +22,28 @@ The tag `v0.1-week-01-baseline` marks the immutable Week 1 starter snapshot.
 | Experiment | `experiment/month-XX-topic` | `experiment/month-08-network-exchange` |
 | Documentation | `docs/topic` | `docs/fellowship-guide` |
 | Fix | `fix/topic` | `fix/readme-links` |
-| Fellow Work | `fellows/<name>/week-XX` | `fellows/ada/week-01` |
+| Fellow Work | `fellows/<github-username>/month-XX-week-YY-<topic>` | `fellows/ada/month-03-week-02-sync-test` |
 
 ## New Fellow Start
 
 ```bash
 git checkout baseline/week-01-starter
-git checkout -b fellows/<name>/week-01
+git checkout -b fellows/<github-username>/month-01-week-01-setup
 ```
 
 ## Required Learning Evidence
 
 Every weekly branch should include:
 
-- A weekly report in `reports/month-XX/`.
+- A short fellow report named `reports/month-XX/week-YY-fellow-<github-username>.md`.
 - A human learning log in `research/learning-logs/` when the work involved learning.
 - A paper note in `research/paper-notes/` when a paper or technical source influenced the work.
 - A design outcome in `design/outcomes/` when a design, architecture, flow, or data model changed.
 - A feature brief in `features/active/` or `features/completed/` when a feature was planned or finished.
-- Evidence of verification in the weekly report, benchmark output, screenshots, tests, or command output.
+- Links to the fellow's commits or pull request and public post in the fellow report.
+- Evidence of verification in benchmark output, screenshots, tests, command output, or the pull request.
+
+Copy `docs/templates/weekly-report-template.md` to create the report. Each fellow owns one file per week, so branches can merge without several people changing the same document. See `reports/README.md` for the naming rule.
 
 ## Human Work And AI Assistance
 

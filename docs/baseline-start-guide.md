@@ -35,14 +35,14 @@ Start from the Week 1 baseline:
 
 ```bash
 git checkout baseline/week-01-starter
-git checkout -b fellows/<name>/week-01
+git checkout -b fellows/<github-username>/month-01-week-01-setup
 ```
 
 Example:
 
 ```bash
 git checkout baseline/week-01-starter
-git checkout -b fellows/ada/week-01
+git checkout -b fellows/ada/month-01-week-01-setup
 ```
 
 ## Alternative: Start From The Tag
@@ -51,7 +51,7 @@ Use the tag when you want the exact immutable snapshot:
 
 ```bash
 git checkout v0.1-week-01-baseline
-git checkout -b fellows/<name>/week-01
+git checkout -b fellows/<github-username>/month-01-week-01-setup
 ```
 
 ## Ongoing Fellow Workflow
@@ -59,9 +59,9 @@ git checkout -b fellows/<name>/week-01
 After Week 1, a fellow can continue their own sequence:
 
 ```text
-fellows/<name>/week-01
-fellows/<name>/week-02
-fellows/<name>/week-03
+fellows/<github-username>/month-01-week-01-setup
+fellows/<github-username>/month-01-week-02-local-storage
+fellows/<github-username>/month-01-week-03-local-ai-flow
 ```
 
 Shared project work still uses the normal branch types:

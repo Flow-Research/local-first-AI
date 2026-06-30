@@ -1,35 +1,24 @@
-# Month X Week Y: Title
+# Fellow Weekly Update
 
-## 1. Goal for the Week
+- **Fellow:** Your name
+- **GitHub username:** `your-username`
+- **Week:** Month XX, Week YY
+- **Topic:** Short topic name
 
-## 2. Research / Learning
+## What I Did
 
-Paper or source:
+- Describe the main contribution.
+- Add another result only if needed.
 
-Key lesson:
+## Commits
 
-My explanation in my own words:
+- [Short commit description](https://github.com/OWNER/REPOSITORY/commit/COMMIT_SHA)
+- **Pull request:** [PR #](https://github.com/OWNER/REPOSITORY/pull/PR_NUMBER)
 
-## 3. Design Outcome
+## Public Post
 
-Design artifact:
+- [Post title](https://example.com/post) — Medium, X, LinkedIn, or another public platform
 
-Decision:
+## Blocker or Next Step
 
-Human input:
-
-AI assistance:
-
-## 4. What I Built
-
-## 5. Files Added or Changed
-
-## 6. Evidence
-
-What I personally verified:
-
-Command, screenshot, benchmark, test, or review evidence:
-
-## 7. Problems / Blockers
-
-## 8. Next Step
+One short sentence. Write `None` if there is no blocker or next step.

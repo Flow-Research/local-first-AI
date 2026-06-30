@@ -19,7 +19,7 @@ New fellows who start from Week 1 should branch from `baseline/week-01-starter`,
 | `design/` | Architecture, flows, diagrams, and prototypes | `design/month-03-demo-storyboard` |
 | `experiment/` | Temporary technical trials | `experiment/month-08-network-exchange` |
 | `fix/` | Small corrections | `fix/readme-links` |
-| `fellows/` | Individual fellow learning branches | `fellows/ada/week-01` |
+| `fellows/` | Individual fellow learning branches | `fellows/ada/month-03-week-02-sync-test` |
 | `docs/` | Documentation-only work | `docs/month-01-report-cleanup` |
 
 ## Feature Folder Flow
@@ -40,7 +40,7 @@ Use `features/` to keep feature thinking separate from final code.
 4. Add design outcomes in `design/outcomes/`.
 5. Implement the smallest useful code change in `src/`.
 6. Add tests, benchmark evidence, screenshots, or command output.
-7. Update the weekly report.
+7. Add your own `week-YY-fellow-<github-username>.md` report.
 8. Merge back to `master` only when the branch is coherent and documented.
 
 ## Merge Checklist

@@ -81,7 +81,7 @@ The branch returns to `master` only after learning, design, build output, and ve
 
 The `reports/` folder contains `month-01` through `month-12`.
 
-Each month has four weekly report files. This gives the fellowship a complete 48-week learning path.
+Each month has four project week overview files. Fellows add their own `week-YY-fellow-<github-username>.md` updates beside the overview, making individual contributions easy to review and merge.
 
 Weekly reports should include:
 
@@ -202,7 +202,7 @@ This makes every merge teachable and reviewable.
 5. Create a design outcome if a decision is needed.
 6. Build the smallest useful output.
 7. Verify it with a test, benchmark, screenshot, command output, or manual review.
-8. Update the weekly report.
+8. Add your own fellow weekly update.
 9. Run the verification script.
 10. Open a pull request.
 11. Review with another person.
