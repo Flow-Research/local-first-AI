@@ -81,7 +81,7 @@ The branch returns to `master` only after learning, design, build output, and ve
 
 The `reports/` folder contains `month-01` through `month-12`.
 
-Each month has four weekly report files. This gives the fellowship a complete 48-week learning path.
+Each month has four weekly report files. Every fellow adds a short named block to the relevant shared report.
 
 Weekly reports should include:
 
@@ -183,11 +183,8 @@ A reviewer should ask:
 
 The pull request template requires:
 
-- Branch from `master`.
+- Branch from the matching `weeks/month-XX-week-YY` branch.
 - Weekly report update.
-- Human learning evidence.
-- Research note if a paper shaped the work.
-- Design outcome if the architecture, data model, flow, or interface changed.
 - Verification evidence.
 - AI-use review.
 
@@ -195,18 +192,18 @@ This makes every merge teachable and reviewable.
 
 ## How A Fellow Should Work Each Week
 
-1. Start from `master`.
-2. Create a focused branch.
+1. Start from the matching weekly branch.
+2. Create a focused fellow branch.
 3. Read the weekly paper or technical source.
-4. Write a paper note or learning log.
-5. Create a design outcome if a decision is needed.
-6. Build the smallest useful output.
-7. Verify it with a test, benchmark, screenshot, command output, or manual review.
-8. Update the weekly report.
-9. Run the verification script.
-10. Open a pull request.
-11. Review with another person.
-12. Merge only when the work is understandable.
+4. Build the smallest useful output.
+5. Verify it with a test, benchmark, screenshot, command output, or manual review.
+6. Add your name, topic, at least 20 words about what you did, and public-output link to the weekly report.
+7. Run the verification script.
+8. Open a pull request to the matching weekly branch.
+9. Review with another person.
+10. Merge only when the work is understandable.
+
+The weekly report is the only documentation file fellows must update. Extra research, design, feature, or learning documents are optional unless the task explicitly requires them.
 
 ## What Good Progress Looks Like
 

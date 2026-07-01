@@ -6,13 +6,15 @@ The project uses verification to make sure commits show real learning, design, a
 
 Verification does not mean the project is perfect. It means each contribution leaves enough evidence for another person to understand and review it.
 
-## Required Evidence By Work Type
+## Supporting Evidence By Work Type
+
+The shared weekly report is the only documentation file fellows must update. The items below are examples of useful supporting evidence when they are relevant to the assigned task; they are not mandatory extra documentation.
 
 | Work Type | Required Evidence |
 |---|---|
 | Research | Paper note, source link, human summary, project implication |
 | Design | Design outcome, options considered, chosen direction, risk |
-| Feature | Feature brief, code change, verification evidence, weekly report |
+| Feature | Code change, verification evidence, weekly report |
 | Benchmark | Runner or method, result file, interpretation note |
 | Documentation | Updated doc, reason for change, reviewer-readable explanation |
 | Experiment | Hypothesis, method, result, decision on whether to continue |
@@ -33,9 +35,11 @@ The script checks that:
 
 - Core docs exist.
 - All 12 report months exist.
-- Each report month has 4 weekly report files.
-- Weekly reports include research, design, and evidence sections.
+- Each report month has 4 weekly reports.
+- Weekly reports use the short fellow format or the preserved legacy format.
 - Contribution and pull request documents exist.
+
+The GitHub Action runs only for pushes to `fellows/**` and pull requests into `weeks/**`. For a pull request, it also checks that the fellow branch targets the matching month and week and changes that week's shared report.
 
 ## Human Review
 
@@ -53,7 +57,8 @@ The script is not enough by itself. A reviewer should also check:
 
 New work belongs on:
 
-- `fellows/<name>/week-XX`
+- `fellows/<github-username>/month-XX-week-YY-<topic>`
+- `weeks/month-XX-week-YY` for reviewed weekly integration
 - `feature/month-XX-week-YY-topic`
 - `research/month-XX-topic`
 - `design/month-XX-topic`

@@ -6,9 +6,15 @@ This project is a fellowship-style learning project. The goal is not for AI to d
 
 `master` is the evolving stable project branch. Do not work directly on `master`.
 
-Every meaningful contribution should happen on a branch created from `master`.
+Each week has an integration branch created from `master`. Fellows create their individual branches from that weekly branch:
 
-New fellows who are starting at Week 1 should branch from `baseline/week-01-starter` instead of the current `master`.
+```text
+fellows/<github-username>/month-XX-week-YY-<topic>
+        -> weeks/month-XX-week-YY
+        -> master
+```
+
+For a new fellowship starting at Week 1, create `weeks/month-01-week-01` from `baseline/week-01-starter`.
 
 The tag `v0.1-week-01-baseline` marks the immutable Week 1 starter snapshot.
 
@@ -22,25 +28,36 @@ The tag `v0.1-week-01-baseline` marks the immutable Week 1 starter snapshot.
 | Experiment | `experiment/month-XX-topic` | `experiment/month-08-network-exchange` |
 | Documentation | `docs/topic` | `docs/fellowship-guide` |
 | Fix | `fix/topic` | `fix/readme-links` |
-| Fellow Work | `fellows/<name>/week-XX` | `fellows/ada/week-01` |
+| Fellow Work | `fellows/<github-username>/month-XX-week-YY-<topic>` | `fellows/ada/month-03-week-02-sync-test` |
+| Weekly Integration | `weeks/month-XX-week-YY` | `weeks/month-03-week-02` |
 
-## New Fellow Start
+## Create A Fellow Branch
 
 ```bash
-git checkout baseline/week-01-starter
-git checkout -b fellows/<name>/week-01
+git fetch origin
+git switch weeks/month-03-week-02
+git pull origin weeks/month-03-week-02
+git switch -c fellows/<github-username>/month-03-week-02-<topic>
 ```
 
-## Required Learning Evidence
+Example:
 
-Every weekly branch should include:
+```bash
+git switch -c fellows/ada/month-03-week-02-sync-test
+```
 
-- A weekly report in `reports/month-XX/`.
-- A human learning log in `research/learning-logs/` when the work involved learning.
-- A paper note in `research/paper-notes/` when a paper or technical source influenced the work.
-- A design outcome in `design/outcomes/` when a design, architecture, flow, or data model changed.
-- A feature brief in `features/active/` or `features/completed/` when a feature was planned or finished.
-- Evidence of verification in the weekly report, benchmark output, screenshots, tests, or command output.
+Push the fellow branch and open its pull request against `weeks/month-03-week-02`, not `master`. The GitHub Action checks the fellow branch name, matching weekly target, weekly report update, repository structure, and unresolved conflict markers.
+
+## Required Weekly Documentation
+
+The shared weekly report is the only documentation file every fellow must modify. Each fellow adds:
+
+- A short named block in the existing `reports/month-XX/week-YY.md` report.
+- The topic they worked on.
+- At least 20 words explaining what they did.
+- A link to the fellow's public post in the weekly report.
+
+Each fellow edits only their numbered block, such as `Fellow 1: Ada`. Separate learning logs, paper notes, design outcomes, and feature briefs are not required unless the assigned task specifically asks for them. Code, tests, or other project files may still change when needed to complete the work. See `reports/README.md` for the report format.
 
 ## Human Work And AI Assistance
 
@@ -73,10 +90,12 @@ Then fill the pull request checklist in `.github/PULL_REQUEST_TEMPLATE.md`.
 
 ## Merge Standard
 
-A branch should only merge back to `master` when another person can understand:
+A fellow branch should only merge into its matching `weeks/month-XX-week-YY` branch when another person can understand:
 
 - What was learned.
 - What was designed.
 - What was built.
 - What was verified.
 - What still needs work.
+
+After all accepted fellow contributions are combined and reviewed, open one pull request from the weekly branch into `master`.

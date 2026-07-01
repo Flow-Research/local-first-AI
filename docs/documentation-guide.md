@@ -16,7 +16,7 @@
 | `docs/commit-verification.md` | What must be verified before merge |
 | `docs/branching-and-features.md` | Branch and feature workflow |
 | `docs/research-and-design-architecture.md` | Research, design, build, and documentation loop |
-| `reports/` | Weekly learning journal |
+| `reports/` | One shared report per week with a short block for each fellow |
 | `research/paper-notes/` | Notes from papers and technical sources |
 | `research/learning-logs/` | Human learning reflections |
 | `design/outcomes/` | Design decisions, sketches, and outcomes |
@@ -43,11 +43,20 @@ The question is not only "Did the code change?" The better question is:
 
 > Can another fellow understand what was learned, what was decided, what was built, and what was verified?
 
+## Fellow Weekly Update
+
+Each week uses one existing report:
+
+```text
+reports/month-XX/week-YY.md
+```
+
+Each contributor fills in a numbered block such as `Fellow 1: Full Name`. Add only the topic, at least 20 words explaining what the fellow did, and a link to their public output.
+
+The weekly report is the only required documentation change for fellows. Only edit your own fellow block. Git records the contribution through the commit on your branch. Other project files only need to change when the assigned work requires them.
+
 ## Multi-Language Documentation Rule
 
-When work introduces Python, C, C++, or Rust code, the weekly report should say:
+Keep the weekly report concise while meeting the 20-word minimum even when work introduces Python, C, C++, or Rust. Additional documentation is optional unless the assigned task requires it.
 
-- Why that language was chosen for the task.
-- How the code was run or checked.
-- What tradeoff the language introduced.
-- Whether the code is prototype, experiment, or stable baseline.
+The description can summarize the language choice, how the work was checked, an important tradeoff, the result, and the next lesson.

@@ -1,35 +1,15 @@
-# Month X Week Y: Title
+# Month XX Week YY: Weekly Report
 
-## 1. Goal for the Week
+Add one block for every fellow who contributed. Keep each block short.
 
-## 2. Research / Learning
+## Fellow 1: Full Name
 
-Paper or source:
+- **Topic:** Topic worked on
+- **What I did:** Describe the work you completed, the result you achieved, how you verified it, one challenge you addressed, and the main lesson you learned this week. Use at least 20 words.
+- **Public output:** [Post title](https://example.com/post) - Medium, X, LinkedIn, or another public platform
 
-Key lesson:
+## Fellow 2: Full Name
 
-My explanation in my own words:
-
-## 3. Design Outcome
-
-Design artifact:
-
-Decision:
-
-Human input:
-
-AI assistance:
-
-## 4. What I Built
-
-## 5. Files Added or Changed
-
-## 6. Evidence
-
-What I personally verified:
-
-Command, screenshot, benchmark, test, or review evidence:
-
-## 7. Problems / Blockers
-
-## 8. Next Step
+- **Topic:** Topic worked on
+- **What I did:** Describe the work you completed, the result you achieved, how you verified it, one challenge you addressed, and the main lesson you learned this week. Use at least 20 words.
+- **Public output:** [Post title](https://example.com/post) - Medium, X, LinkedIn, or another public platform

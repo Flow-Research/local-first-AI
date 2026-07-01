@@ -7,7 +7,9 @@ This repository is organized around a research-to-design-to-build loop.
 ```text
 master branch
   |
-new branch
+weeks/month-XX-week-YY
+  |
+fellows/<username>/month-XX-week-YY-topic
   |
 Research input
   |
@@ -19,10 +21,12 @@ Code / benchmark / docs change
   |
 Weekly report
   |
-merge back to master
+merge into weekly branch
+  |
+weekly branch merges into master
 ```
 
-`master` should stay clean. It is the stable baseline used to start each feature, research, design, documentation, experiment, or fix branch.
+`master` should stay clean. Weekly integration branches start from it, individual fellow branches start from the matching weekly branch, and only the reviewed weekly branch returns to `master`.
 
 ## Repository Architecture
 
