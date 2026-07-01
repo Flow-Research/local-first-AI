@@ -54,7 +54,7 @@ The shared weekly report is the only documentation file every fellow must modify
 
 - A short named block in the existing `reports/month-XX/week-YY.md` report.
 - The topic they worked on.
-- Exactly five sentences explaining what they did.
+- At least 20 words explaining what they did.
 - A link to the fellow's public post in the weekly report.
 
 Each fellow edits only their numbered block, such as `Fellow 1: Ada`. Separate learning logs, paper notes, design outcomes, and feature briefs are not required unless the assigned task specifically asks for them. Code, tests, or other project files may still change when needed to complete the work. See `reports/README.md` for the report format.

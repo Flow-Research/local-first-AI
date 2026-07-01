@@ -51,12 +51,12 @@ Each week uses one existing report:
 reports/month-XX/week-YY.md
 ```
 
-Each contributor fills in a numbered block such as `Fellow 1: Full Name`. Add only the topic, exactly five sentences explaining what the fellow did, and a link to their public output.
+Each contributor fills in a numbered block such as `Fellow 1: Full Name`. Add only the topic, at least 20 words explaining what the fellow did, and a link to their public output.
 
 The weekly report is the only required documentation change for fellows. Only edit your own fellow block. Git records the contribution through the commit on your branch. Other project files only need to change when the assigned work requires them.
 
 ## Multi-Language Documentation Rule
 
-Keep the weekly report to the required five sentences even when work introduces Python, C, C++, or Rust. Additional documentation is optional unless the assigned task requires it.
+Keep the weekly report concise while meeting the 20-word minimum even when work introduces Python, C, C++, or Rust. Additional documentation is optional unless the assigned task requires it.
 
-The five sentences can summarize the language choice, how the work was checked, an important tradeoff, the result, and the next lesson.
+The description can summarize the language choice, how the work was checked, an important tradeoff, the result, and the next lesson.

@@ -80,7 +80,7 @@ jobs:
             exit 1
           fi
 
-      - name: Verify contribution structure
+      - name: Verify report structure and 20-word minimum
         shell: pwsh
         run: ./scripts/verify-contribution.ps1
 

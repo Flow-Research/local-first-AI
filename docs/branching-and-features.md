@@ -44,7 +44,7 @@ Use `features/` to keep feature thinking separate from final code.
 1. Branch from the matching `weeks/month-XX-week-YY` branch.
 2. Implement the assigned work in the relevant project files.
 3. Add or run the relevant verification.
-4. Fill in your named block in the existing weekly report using exactly five sentences.
+4. Fill in your named block in the existing weekly report using at least 20 words for what you did.
 5. Open a pull request into the matching weekly branch.
 6. Merge the weekly branch into `master` after all fellow contributions are reviewed together.
 
@@ -57,7 +57,7 @@ The weekly report is the only required documentation file. Research notes, desig
 | Fellow branch started from the matching weekly branch | Yes |
 | Pull request targets the matching weekly branch | Yes |
 | Weekly report updated | Yes |
-| Fellow block contains name, topic, five sentences, and public-output link | Yes |
+| Fellow block contains name, topic, at least 20 words, and public-output link | Yes |
 | Tests or manual verification recorded | Yes |
 | README changed only when the public project overview changed | Yes |
 

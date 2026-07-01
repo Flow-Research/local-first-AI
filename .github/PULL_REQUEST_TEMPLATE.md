@@ -10,7 +10,7 @@
 
 - [ ] I can explain what changed without relying only on AI output.
 - [ ] I filled in my named block in the existing weekly report.
-- [ ] I included exactly five sentences describing what I did.
+- [ ] I included at least 20 words describing what I did.
 - [ ] I included my topic and public-output link.
 
 ## Verification

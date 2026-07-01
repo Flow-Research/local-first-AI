@@ -16,15 +16,10 @@ Add or fill in one numbered fellow block:
 ## Fellow 1: Full Name
 
 - **Topic:** Topic worked on
-- **What I did (five sentences):**
-  1. First completed action or result.
-  2. Second completed action or result.
-  3. Third completed action or result.
-  4. Fourth completed action or result.
-  5. Fifth completed action, result, or lesson.
+- **What I did:** Describe the work you completed, the result you achieved, how you verified it, one challenge you addressed, and the main lesson you learned this week. Use at least 20 words.
 - **Public output:** [Post title](https://example.com/post) - Medium, X, LinkedIn, or another public platform
 ```
 
 Use the next available number, such as `Fellow 2` or `Fellow 3`. Only edit your own block. Your branch commit will show who added the update.
 
-The weekly report is the only documentation file a fellow is required to modify. It asks only for the fellow's name, topic, exactly five sentences about completed work, and public-output link. Fellows may still change code, tests, research, or other project files when those changes are part of the actual task.
+The weekly report is the only documentation file a fellow is required to modify. It asks only for the fellow's name, topic, at least 20 words about completed work, and public-output link. Fellows may still change code, tests, research, or other project files when those changes are part of the actual task.

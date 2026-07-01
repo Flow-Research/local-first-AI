@@ -197,7 +197,7 @@ This makes every merge teachable and reviewable.
 3. Read the weekly paper or technical source.
 4. Build the smallest useful output.
 5. Verify it with a test, benchmark, screenshot, command output, or manual review.
-6. Add your name, topic, five sentences, and public-output link to the weekly report.
+6. Add your name, topic, at least 20 words about what you did, and public-output link to the weekly report.
 7. Run the verification script.
 8. Open a pull request to the matching weekly branch.
 9. Review with another person.
