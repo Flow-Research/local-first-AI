@@ -2,7 +2,7 @@
 
 > Think of this report as the Week 2 checklist: what works, what is still waiting, and exactly what to fix.
 
-**Generated:** 2026-07-03T05:46:19+00:00
+**Generated:** 2026-07-03T05:46:51+00:00
 
 ## Where We Are
 
@@ -25,8 +25,8 @@ The shared base works. The remaining checks are waiting for the four fellow-owne
 
 ### Shared database contract - PASS
 
-**File:** `src/python/local_first_ai/storage/db_contract.py`  
-**Status:** All available asserted cases passed.
+- **File:** `src/python/local_first_ai/storage/db_contract.py`
+- **Status:** All available asserted cases passed.
 
 - **PASS:** Connection returns mapping friendly rows - All assertions passed. (`test_connection_returns_mapping_friendly_rows`)
 - **PASS:** Database uses requested test path - All assertions passed. (`test_database_uses_requested_test_path`)
@@ -35,8 +35,8 @@ The shared base works. The remaining checks are waiting for the four fellow-owne
 
 ### Fellow 1 - Create context - WAITING
 
-**File:** `src/python/local_first_ai/storage/create_context.py`  
-**Status:** File not added.
+- **File:** `src/python/local_first_ai/storage/create_context.py`
+- **Status:** File not added.
 
 - **WAITING:** Create rejects empty title and content - Not active yet. (`test_create_rejects_empty_title_and_content`)
 - **WAITING:** Create rejects invalid context type - Not active yet. (`test_create_rejects_invalid_context_type`)
@@ -44,8 +44,8 @@ The shared base works. The remaining checks are waiting for the four fellow-owne
 
 ### Fellow 2 - Read context - WAITING
 
-**File:** `src/python/local_first_ai/storage/read_context.py`  
-**Status:** File not added.
+- **File:** `src/python/local_first_ai/storage/read_context.py`
+- **Status:** File not added.
 
 - **WAITING:** Empty database is clear and missing ID does not crash - Not active yet. (`test_empty_database_is_clear_and_missing_id_does_not_crash`)
 - **WAITING:** Filter by context type - Not active yet. (`test_filter_by_context_type`)
@@ -54,8 +54,8 @@ The shared base works. The remaining checks are waiting for the four fellow-owne
 
 ### Fellow 3 - Search context - WAITING
 
-**File:** `src/python/local_first_ai/storage/search_context.py`  
-**Status:** File not added.
+- **File:** `src/python/local_first_ai/storage/search_context.py`
+- **Status:** File not added.
 
 - **WAITING:** Prepare context returns inference ready text - Not active yet. (`test_prepare_context_returns_inference_ready_text`)
 - **WAITING:** Search by type limits results - Not active yet. (`test_search_by_type_limits_results`)
@@ -66,8 +66,8 @@ The shared base works. The remaining checks are waiting for the four fellow-owne
 
 ### Fellow 4 - Manage context - WAITING
 
-**File:** `src/python/local_first_ai/storage/manage_context.py`  
-**Status:** File not added.
+- **File:** `src/python/local_first_ai/storage/manage_context.py`
+- **Status:** File not added.
 
 - **WAITING:** Delete removes existing item - Not active yet. (`test_delete_removes_existing_item`)
 - **WAITING:** Prove persistence reopens the database - Not active yet. (`test_prove_persistence_reopens_the_database`)
@@ -77,8 +77,8 @@ The shared base works. The remaining checks are waiting for the four fellow-owne
 
 ### Week 2 integrated demo - WAITING
 
-**File:** `src/python/local_first_ai/storage/week_02_demo.py`  
-**Status:** Dependencies not added.
+- **File:** `src/python/local_first_ai/storage/week_02_demo.py`
+- **Status:** Dependencies not added.
 
 - **WAITING:** Integrated demo completes - Not active yet. (`test_integrated_demo_completes`)
 

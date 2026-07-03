@@ -672,8 +672,8 @@ def write_markdown_report(
             [
                 f"### {label} - {component_status}",
                 "",
-                f"**File:** `{file_path}`  ",
-                f"**Status:** {component_note}",
+                f"- **File:** `{file_path}`",
+                f"- **Status:** {component_note}",
                 "",
             ]
         )
