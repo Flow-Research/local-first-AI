@@ -6,20 +6,21 @@ Run from the repository root:
 
 Each fellow-owned test class is skipped only while its module does not exist.
 Once a fellow adds their module, that slice's tests become active. The shared
-database contract tests always run. The command prints a simple readiness list
-and a final summary showing passed, waiting, failed, and errored tests. It also
-overwrites ``tests/python/storage/week_02_test_report.md`` with the latest
-human-readable result.
+database contract tests always run. The command prints only a three-line
+summary, then overwrites ``tests/python/storage/week_02_test_report.md`` with
+the full list of waiting files, failed test cases, and tracebacks.
 """
 
 from __future__ import annotations
 
 import importlib
+import io
 import os
 import sqlite3
 import sys
 import tempfile
 import time
+import traceback
 import unittest
 from collections.abc import Mapping
 from datetime import datetime, timezone
@@ -36,6 +37,9 @@ from local_first_ai.storage import db_contract  # noqa: E402
 from local_first_ai.storage import week_02_demo  # noqa: E402
 
 
+MODULE_IMPORT_ERRORS: dict[str, str] = {}
+
+
 def _optional_module(module_name: str):
     """Return an implemented fellow module, or None while that slice is absent."""
 
@@ -44,7 +48,11 @@ def _optional_module(module_name: str):
     except ModuleNotFoundError as error:
         if error.name == module_name:
             return None
-        raise
+        MODULE_IMPORT_ERRORS[module_name] = traceback.format_exc()
+        return None
+    except Exception:
+        MODULE_IMPORT_ERRORS[module_name] = traceback.format_exc()
+        return None
 
 
 # These checks make the test file useful from day one. A fellow activates only
@@ -62,36 +70,42 @@ COMPONENTS = (
         "TestDatabaseContract",
         "src/python/local_first_ai/storage/db_contract.py",
         True,
+        None,
     ),
     (
         "Fellow 1 - Create context",
         "TestCreateContext",
         "src/python/local_first_ai/storage/create_context.py",
         CREATE_MODULE is not None,
+        "local_first_ai.storage.create_context",
     ),
     (
         "Fellow 2 - Read context",
         "TestReadContext",
         "src/python/local_first_ai/storage/read_context.py",
         READ_MODULE is not None,
+        "local_first_ai.storage.read_context",
     ),
     (
         "Fellow 3 - Search context",
         "TestSearchContext",
         "src/python/local_first_ai/storage/search_context.py",
         SEARCH_MODULE is not None,
+        "local_first_ai.storage.search_context",
     ),
     (
         "Fellow 4 - Manage context",
         "TestManageContext",
         "src/python/local_first_ai/storage/manage_context.py",
         MANAGE_MODULE is not None,
+        "local_first_ai.storage.manage_context",
     ),
     (
         "Week 2 integrated demo",
         "TestWeek02Demo",
         "src/python/local_first_ai/storage/week_02_demo.py",
         all((CREATE_MODULE, READ_MODULE, SEARCH_MODULE, MANAGE_MODULE)),
+        None,
     ),
 )
 
@@ -536,8 +550,10 @@ def write_markdown_report(
     errors = list(result.errors)
     problems = failures + errors
     problem_classes = {test.__class__.__name__ for test, _ in problems}
+    total_errors = len(errors) + len(MODULE_IMPORT_ERRORS)
+    successful = result.wasSuccessful() and not MODULE_IMPORT_ERRORS
 
-    if result.wasSuccessful():
+    if successful:
         overall = (
             "PASS - all available components passed. "
             "Some fellow components are still waiting."
@@ -564,7 +580,7 @@ def write_markdown_report(
         f"| Passed | {passed} |",
         f"| Waiting / skipped | {len(result.skipped)} |",
         f"| Failed | {len(failures)} |",
-        f"| Errors | {len(errors)} |",
+        f"| Errors | {total_errors} |",
         "",
         "## Component and File Status",
         "",
@@ -573,8 +589,11 @@ def write_markdown_report(
     ]
 
     waiting_components: list[tuple[str, str, str]] = []
-    for label, test_class, file_path, available in COMPONENTS:
-        if not available:
+    for label, test_class, file_path, available, module_name in COMPONENTS:
+        import_failed = module_name in MODULE_IMPORT_ERRORS
+        if import_failed:
+            status = "FAILING - module could not be imported"
+        elif not available:
             file_exists = (REPOSITORY_ROOT / file_path).exists()
             reason = (
                 "dependencies not added"
@@ -590,9 +609,31 @@ def write_markdown_report(
         lines.append(f"| {label} | `{file_path}` | {status} |")
 
     lines.extend(["", "## Files Still Failing", ""])
-    if not problems:
+    if not problems and not MODULE_IMPORT_ERRORS:
         lines.append("No implemented file is currently failing.")
     else:
+        for module_name, traceback_text in MODULE_IMPORT_ERRORS.items():
+            file_path = next(
+                (
+                    component[2]
+                    for component in COMPONENTS
+                    if component[4] == module_name
+                ),
+                "Unknown file",
+            )
+            lines.extend(
+                [
+                    f"### IMPORT ERROR: `{file_path}`",
+                    "",
+                    f"- Module: `{module_name}`",
+                    "",
+                    "```text",
+                    traceback_text.rstrip(),
+                    "```",
+                    "",
+                ]
+            )
+
         for test, traceback_text in problems:
             test_class = test.__class__.__name__
             file_path = next(
@@ -647,66 +688,44 @@ def write_markdown_report(
 
 
 class FellowFriendlyTestRunner(unittest.TextTestRunner):
-    """Print a compact summary after unittest finishes its normal output."""
+    """Run quietly and write all detailed results to the Markdown report."""
 
     resultclass = FellowFriendlyTestResult
 
     def run(self, test):
         result = super().run(test)
-        passed = (
+        self.passed = (
             result.testsRun
             - len(result.failures)
             - len(result.errors)
             - len(result.skipped)
             - len(result.expectedFailures)
         )
-        report_path = write_markdown_report(result, passed)
-
-        self.stream.writeln("")
-        self.stream.writeln("=" * 58)
-        self.stream.writeln("WEEK 2 LOCAL CONTEXT STORE - TEST SUMMARY")
-        self.stream.writeln("=" * 58)
-        self.stream.writeln(f"PASSED:            {passed}")
-        self.stream.writeln(f"WAITING / SKIPPED: {len(result.skipped)}")
-        self.stream.writeln(f"FAILED:            {len(result.failures)}")
-        self.stream.writeln(f"ERRORS:            {len(result.errors)}")
-        self.stream.writeln(
-            f"REPORT:            {report_path.relative_to(REPOSITORY_ROOT)}"
-        )
-
-        if result.wasSuccessful():
-            self.stream.writeln(
-                "RESULT: The available Week 2 components are working."
-            )
-            if result.skipped:
-                self.stream.writeln(
-                    "NEXT: Waiting tests activate automatically when fellow "
-                    "modules are added."
-                )
-        else:
-            self.stream.writeln(
-                "RESULT: Action is required. Read the failed test above."
-            )
-        self.stream.writeln("=" * 58)
+        self.report_path = write_markdown_report(result, self.passed)
         return result
 
 
-def print_readiness() -> None:
-    """Show fellows which slices are available before the tests begin."""
-
-    print("\nWEEK 2 TEST READINESS")
-    print("-" * 58)
-    for label, _test_class, _file_path, ready in COMPONENTS:
-        state = "READY" if ready else "WAITING"
-        print(f"[{state:<7}] {label}")
-    print("-" * 58)
-
-
 if __name__ == "__main__":
-    print_readiness()
     test_suite = unittest.defaultTestLoader.loadTestsFromModule(sys.modules[__name__])
-    test_result = FellowFriendlyTestRunner(
-        stream=sys.stdout,
-        verbosity=2,
-    ).run(test_suite)
-    raise SystemExit(0 if test_result.wasSuccessful() else 1)
+    quiet_output = io.StringIO()
+    test_runner = FellowFriendlyTestRunner(stream=quiet_output, verbosity=0)
+    test_result = test_runner.run(test_suite)
+
+    total_errors = len(test_result.errors) + len(MODULE_IMPORT_ERRORS)
+    successful = test_result.wasSuccessful() and not MODULE_IMPORT_ERRORS
+    result_label = "PASS" if successful else "FAIL"
+
+    # Keep the terminal short. All test names, waiting files, and tracebacks are
+    # available in the report written by FellowFriendlyTestRunner.
+    print(f"WEEK 2 TEST RESULT: {result_label}")
+    print(
+        f"Passed: {test_runner.passed} | "
+        f"Waiting: {len(test_result.skipped)} | "
+        f"Failed: {len(test_result.failures)} | "
+        f"Errors: {total_errors}"
+    )
+    print(
+        "Detailed report: "
+        f"{test_runner.report_path.relative_to(REPOSITORY_ROOT)}"
+    )
+    raise SystemExit(0 if successful else 1)
