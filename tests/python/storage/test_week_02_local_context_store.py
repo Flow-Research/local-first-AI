@@ -7,7 +7,9 @@ Run from the repository root:
 Each fellow-owned test class is skipped only while its module does not exist.
 Once a fellow adds their module, that slice's tests become active. The shared
 database contract tests always run. The command prints a simple readiness list
-and a final summary showing passed, waiting, failed, and errored tests.
+and a final summary showing passed, waiting, failed, and errored tests. It also
+overwrites ``tests/python/storage/week_02_test_report.md`` with the latest
+human-readable result.
 """
 
 from __future__ import annotations
@@ -27,6 +29,7 @@ from unittest.mock import patch
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[3]
 PYTHON_SOURCE_ROOT = REPOSITORY_ROOT / "src" / "python"
+TEST_REPORT_PATH = Path(__file__).resolve().parent / "week_02_test_report.md"
 sys.path.insert(0, str(PYTHON_SOURCE_ROOT))
 
 from local_first_ai.storage import db_contract  # noqa: E402
@@ -50,6 +53,47 @@ CREATE_MODULE = _optional_module("local_first_ai.storage.create_context")
 READ_MODULE = _optional_module("local_first_ai.storage.read_context")
 SEARCH_MODULE = _optional_module("local_first_ai.storage.search_context")
 MANAGE_MODULE = _optional_module("local_first_ai.storage.manage_context")
+
+# This map connects a failed test class to the file a fellow should inspect.
+# It is also used to show missing files as WAITING rather than FAILED.
+COMPONENTS = (
+    (
+        "Shared database contract",
+        "TestDatabaseContract",
+        "src/python/local_first_ai/storage/db_contract.py",
+        True,
+    ),
+    (
+        "Fellow 1 - Create context",
+        "TestCreateContext",
+        "src/python/local_first_ai/storage/create_context.py",
+        CREATE_MODULE is not None,
+    ),
+    (
+        "Fellow 2 - Read context",
+        "TestReadContext",
+        "src/python/local_first_ai/storage/read_context.py",
+        READ_MODULE is not None,
+    ),
+    (
+        "Fellow 3 - Search context",
+        "TestSearchContext",
+        "src/python/local_first_ai/storage/search_context.py",
+        SEARCH_MODULE is not None,
+    ),
+    (
+        "Fellow 4 - Manage context",
+        "TestManageContext",
+        "src/python/local_first_ai/storage/manage_context.py",
+        MANAGE_MODULE is not None,
+    ),
+    (
+        "Week 2 integrated demo",
+        "TestWeek02Demo",
+        "src/python/local_first_ai/storage/week_02_demo.py",
+        all((CREATE_MODULE, READ_MODULE, SEARCH_MODULE, MANAGE_MODULE)),
+    ),
+)
 
 
 class TemporaryContextDatabaseTestCase(unittest.TestCase):
@@ -481,6 +525,127 @@ class FellowFriendlyTestResult(unittest.TextTestResult):
     """Named result type reserved for the fellow-friendly runner."""
 
 
+def write_markdown_report(
+    result: unittest.TestResult,
+    passed: int,
+) -> Path:
+    """Overwrite the Week 2 Markdown report with the latest test result."""
+
+    # unittest stores each problem as (test case, formatted traceback).
+    failures = list(result.failures)
+    errors = list(result.errors)
+    problems = failures + errors
+    problem_classes = {test.__class__.__name__ for test, _ in problems}
+
+    if result.wasSuccessful():
+        overall = (
+            "PASS - all available components passed. "
+            "Some fellow components are still waiting."
+            if result.skipped
+            else "PASS - the complete Week 2 Local Context Store passed."
+        )
+    else:
+        overall = "FAIL - one or more implemented components need attention."
+
+    lines = [
+        "# Week 2 Local Context Store Test Report",
+        "",
+        f"> Generated: {datetime.now(timezone.utc).isoformat(timespec='seconds')}",
+        "> This file is overwritten every time the fellow-friendly test command runs.",
+        "",
+        "## Overall Result",
+        "",
+        f"**{overall}**",
+        "",
+        "## Test Summary",
+        "",
+        "| Result | Count |",
+        "|---|---:|",
+        f"| Passed | {passed} |",
+        f"| Waiting / skipped | {len(result.skipped)} |",
+        f"| Failed | {len(failures)} |",
+        f"| Errors | {len(errors)} |",
+        "",
+        "## Component and File Status",
+        "",
+        "| Component | File to inspect | Status |",
+        "|---|---|---|",
+    ]
+
+    waiting_components: list[tuple[str, str, str]] = []
+    for label, test_class, file_path, available in COMPONENTS:
+        if not available:
+            file_exists = (REPOSITORY_ROOT / file_path).exists()
+            reason = (
+                "dependencies not added"
+                if file_exists
+                else "file not added"
+            )
+            status = f"WAITING - {reason}"
+            waiting_components.append((label, file_path, reason))
+        elif test_class in problem_classes:
+            status = "FAILING - see details below"
+        else:
+            status = "PASS"
+        lines.append(f"| {label} | `{file_path}` | {status} |")
+
+    lines.extend(["", "## Files Still Failing", ""])
+    if not problems:
+        lines.append("No implemented file is currently failing.")
+    else:
+        for test, traceback_text in problems:
+            test_class = test.__class__.__name__
+            file_path = next(
+                (
+                    component[2]
+                    for component in COMPONENTS
+                    if component[1] == test_class
+                ),
+                "Unknown file",
+            )
+            problem_kind = "FAILURE" if any(test is item[0] for item in failures) else "ERROR"
+            lines.extend(
+                [
+                    f"### {problem_kind}: `{file_path}`",
+                    "",
+                    f"- Test: `{test.id()}`",
+                    "",
+                    "```text",
+                    traceback_text.rstrip(),
+                    "```",
+                    "",
+                ]
+            )
+
+    lines.extend(["", "## Files Still Waiting", ""])
+    if not waiting_components:
+        lines.append("No files are waiting. All four fellow modules are present.")
+    else:
+        lines.append(
+            "These are not test failures. Their tests will activate when the "
+            "files are added:"
+        )
+        lines.append("")
+        for label, file_path, reason in waiting_components:
+            lines.append(f"- **{label}:** `{file_path}` ({reason})")
+
+    lines.extend(
+        [
+            "",
+            "## Run Again",
+            "",
+            "```bash",
+            "python tests/python/storage/test_week_02_local_context_store.py",
+            "```",
+            "",
+        ]
+    )
+
+    # write_text replaces the complete old report instead of appending to it.
+    TEST_REPORT_PATH.write_text("\n".join(lines), encoding="utf-8")
+    return TEST_REPORT_PATH
+
+
 class FellowFriendlyTestRunner(unittest.TextTestRunner):
     """Print a compact summary after unittest finishes its normal output."""
 
@@ -495,6 +660,7 @@ class FellowFriendlyTestRunner(unittest.TextTestRunner):
             - len(result.skipped)
             - len(result.expectedFailures)
         )
+        report_path = write_markdown_report(result, passed)
 
         self.stream.writeln("")
         self.stream.writeln("=" * 58)
@@ -504,6 +670,9 @@ class FellowFriendlyTestRunner(unittest.TextTestRunner):
         self.stream.writeln(f"WAITING / SKIPPED: {len(result.skipped)}")
         self.stream.writeln(f"FAILED:            {len(result.failures)}")
         self.stream.writeln(f"ERRORS:            {len(result.errors)}")
+        self.stream.writeln(
+            f"REPORT:            {report_path.relative_to(REPOSITORY_ROOT)}"
+        )
 
         if result.wasSuccessful():
             self.stream.writeln(
@@ -525,21 +694,9 @@ class FellowFriendlyTestRunner(unittest.TextTestRunner):
 def print_readiness() -> None:
     """Show fellows which slices are available before the tests begin."""
 
-    slices = (
-        ("Shared database contract", True),
-        ("Fellow 1 - Create context", CREATE_MODULE is not None),
-        ("Fellow 2 - Read context", READ_MODULE is not None),
-        ("Fellow 3 - Search context", SEARCH_MODULE is not None),
-        ("Fellow 4 - Manage context", MANAGE_MODULE is not None),
-        (
-            "Week 2 integrated demo",
-            all((CREATE_MODULE, READ_MODULE, SEARCH_MODULE, MANAGE_MODULE)),
-        ),
-    )
-
     print("\nWEEK 2 TEST READINESS")
     print("-" * 58)
-    for label, ready in slices:
+    for label, _test_class, _file_path, ready in COMPONENTS:
         state = "READY" if ready else "WAITING"
         print(f"[{state:<7}] {label}")
     print("-" * 58)
