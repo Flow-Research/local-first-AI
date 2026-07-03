@@ -2,11 +2,12 @@
 
 Run from the repository root:
 
-    python -m unittest discover -s tests/python/storage -v
+    python tests/python/storage/test_week_02_local_context_store.py
 
 Each fellow-owned test class is skipped only while its module does not exist.
 Once a fellow adds their module, that slice's tests become active. The shared
-database contract tests always run.
+database contract tests always run. The command prints a simple readiness list
+and a final summary showing passed, waiting, failed, and errored tests.
 """
 
 from __future__ import annotations
@@ -33,6 +34,8 @@ from local_first_ai.storage import week_02_demo  # noqa: E402
 
 
 def _optional_module(module_name: str):
+    """Return an implemented fellow module, or None while that slice is absent."""
+
     try:
         return importlib.import_module(module_name)
     except ModuleNotFoundError as error:
@@ -41,6 +44,8 @@ def _optional_module(module_name: str):
         raise
 
 
+# These checks make the test file useful from day one. A fellow activates only
+# their own section by creating their assigned module.
 CREATE_MODULE = _optional_module("local_first_ai.storage.create_context")
 READ_MODULE = _optional_module("local_first_ai.storage.read_context")
 SEARCH_MODULE = _optional_module("local_first_ai.storage.search_context")
@@ -51,6 +56,8 @@ class TemporaryContextDatabaseTestCase(unittest.TestCase):
     """Provide an isolated database without changing fellow API signatures."""
 
     def setUp(self):
+        # Every test receives a brand-new database. Tests cannot leak data into
+        # another test or into data/local_context_store.db.
         self.temporary_directory = tempfile.TemporaryDirectory()
         self.database_path = (
             Path(self.temporary_directory.name) / "local_context_store.db"
@@ -78,6 +85,8 @@ class TemporaryContextDatabaseTestCase(unittest.TestCase):
         created_at: str | None = None,
         updated_at: str | None = None,
     ) -> int:
+        # Read/search/manage tests seed data directly. This keeps those fellows
+        # independent from Fellow 1's create implementation.
         created_at = created_at or db_contract.utc_now()
         updated_at = updated_at or created_at
         with db_contract.database_connection() as connection:
@@ -133,6 +142,7 @@ class TemporaryContextDatabaseTestCase(unittest.TestCase):
         return item
 
 
+# Shared base: these tests run before any fellow module has been implemented.
 class TestDatabaseContract(TemporaryContextDatabaseTestCase):
     def test_database_uses_requested_test_path(self):
         self.assertEqual(db_contract.get_database_path(), self.database_path.resolve())
@@ -203,6 +213,7 @@ class TestDatabaseContract(TemporaryContextDatabaseTestCase):
             db_contract.validate_importance(6)
 
 
+# Fellow 1: tests become active when create_context.py exists.
 @unittest.skipUnless(
     CREATE_MODULE,
     "Fellow 1: add local_first_ai.storage.create_context to activate these tests",
@@ -264,6 +275,7 @@ class TestCreateContext(TemporaryContextDatabaseTestCase):
             )
 
 
+# Fellow 2: data is seeded directly so these tests do not depend on Fellow 1.
 @unittest.skipUnless(
     READ_MODULE,
     "Fellow 2: add local_first_ai.storage.read_context to activate these tests",
@@ -315,6 +327,7 @@ class TestReadContext(TemporaryContextDatabaseTestCase):
         self.assertEqual([item["id"] for item in items], [newest_id, middle_id])
 
 
+# Fellow 3: known records are seeded so retrieval behavior is deterministic.
 @unittest.skipUnless(
     SEARCH_MODULE,
     "Fellow 3: add local_first_ai.storage.search_context to activate these tests",
@@ -382,6 +395,7 @@ class TestSearchContext(TemporaryContextDatabaseTestCase):
         self.assertLess(elapsed, 1.0)
 
 
+# Fellow 4: tests inspect SQLite after each management operation.
 @unittest.skipUnless(
     MANAGE_MODULE,
     "Fellow 4: add local_first_ai.storage.manage_context to activate these tests",
@@ -446,6 +460,7 @@ class TestManageContext(TemporaryContextDatabaseTestCase):
         self.assertEqual(stored["source"], "inference_output")
 
 
+# Week lead: this final test activates only after all four slices are available.
 @unittest.skipUnless(
     all((CREATE_MODULE, READ_MODULE, SEARCH_MODULE, MANAGE_MODULE)),
     "The full demo activates after all four fellow modules are present",
@@ -462,5 +477,79 @@ class TestWeek02Demo(TemporaryContextDatabaseTestCase):
         )
 
 
+class FellowFriendlyTestResult(unittest.TextTestResult):
+    """Named result type reserved for the fellow-friendly runner."""
+
+
+class FellowFriendlyTestRunner(unittest.TextTestRunner):
+    """Print a compact summary after unittest finishes its normal output."""
+
+    resultclass = FellowFriendlyTestResult
+
+    def run(self, test):
+        result = super().run(test)
+        passed = (
+            result.testsRun
+            - len(result.failures)
+            - len(result.errors)
+            - len(result.skipped)
+            - len(result.expectedFailures)
+        )
+
+        self.stream.writeln("")
+        self.stream.writeln("=" * 58)
+        self.stream.writeln("WEEK 2 LOCAL CONTEXT STORE - TEST SUMMARY")
+        self.stream.writeln("=" * 58)
+        self.stream.writeln(f"PASSED:            {passed}")
+        self.stream.writeln(f"WAITING / SKIPPED: {len(result.skipped)}")
+        self.stream.writeln(f"FAILED:            {len(result.failures)}")
+        self.stream.writeln(f"ERRORS:            {len(result.errors)}")
+
+        if result.wasSuccessful():
+            self.stream.writeln(
+                "RESULT: The available Week 2 components are working."
+            )
+            if result.skipped:
+                self.stream.writeln(
+                    "NEXT: Waiting tests activate automatically when fellow "
+                    "modules are added."
+                )
+        else:
+            self.stream.writeln(
+                "RESULT: Action is required. Read the failed test above."
+            )
+        self.stream.writeln("=" * 58)
+        return result
+
+
+def print_readiness() -> None:
+    """Show fellows which slices are available before the tests begin."""
+
+    slices = (
+        ("Shared database contract", True),
+        ("Fellow 1 - Create context", CREATE_MODULE is not None),
+        ("Fellow 2 - Read context", READ_MODULE is not None),
+        ("Fellow 3 - Search context", SEARCH_MODULE is not None),
+        ("Fellow 4 - Manage context", MANAGE_MODULE is not None),
+        (
+            "Week 2 integrated demo",
+            all((CREATE_MODULE, READ_MODULE, SEARCH_MODULE, MANAGE_MODULE)),
+        ),
+    )
+
+    print("\nWEEK 2 TEST READINESS")
+    print("-" * 58)
+    for label, ready in slices:
+        state = "READY" if ready else "WAITING"
+        print(f"[{state:<7}] {label}")
+    print("-" * 58)
+
+
 if __name__ == "__main__":
-    unittest.main(verbosity=2)
+    print_readiness()
+    test_suite = unittest.defaultTestLoader.loadTestsFromModule(sys.modules[__name__])
+    test_result = FellowFriendlyTestRunner(
+        stream=sys.stdout,
+        verbosity=2,
+    ).run(test_suite)
+    raise SystemExit(0 if test_result.wasSuccessful() else 1)

@@ -3,6 +3,14 @@
 Fellow-owned modules should use :func:`get_connection` instead of opening
 SQLite directly. This keeps the schema, row format, database location, and
 test isolation consistent across create, read, search, and manage operations.
+
+The main pattern fellows need is:
+
+    with database_connection() as connection:
+        rows = connection.execute("SELECT * FROM context_items").fetchall()
+
+The context manager commits successful writes, rolls back failed writes, and
+closes the database file automatically.
 """
 
 from __future__ import annotations
@@ -16,10 +24,14 @@ from pathlib import Path
 from typing import Any
 
 
+# The real app uses data/local_context_store.db. Tests replace it through the
+# environment variable so they never write test records into the real database.
 DATABASE_PATH_ENV = "LOCAL_CONTEXT_DB_PATH"
 PROJECT_ROOT = Path(__file__).resolve().parents[4]
 DEFAULT_DB_PATH = PROJECT_ROOT / "data" / "local_context_store.db"
 
+# Keeping valid types in one shared set prevents each fellow from inventing
+# slightly different spellings for the same kind of memory.
 VALID_CONTEXT_TYPES = frozenset(
     {
         "user_note",
@@ -34,6 +46,7 @@ VALID_CONTEXT_TYPES = frozenset(
 MIN_IMPORTANCE = 1
 MAX_IMPORTANCE = 5
 
+# This is the one table all four fellow modules share.
 CONTEXT_ITEMS_SCHEMA = """
 CREATE TABLE IF NOT EXISTS context_items (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -48,6 +61,8 @@ CREATE TABLE IF NOT EXISTS context_items (
 );
 """
 
+# Indexes are lookup shortcuts. They help SQLite find common filters without
+# scanning every stored item.
 CONTEXT_ITEM_INDEXES = (
     """
     CREATE INDEX IF NOT EXISTS idx_context_type
@@ -82,6 +97,8 @@ def initialize_database(db_path: str | Path | None = None) -> Path:
     database_path = get_database_path(db_path)
     database_path.parent.mkdir(parents=True, exist_ok=True)
 
+    # A sqlite3 connection context manager commits but does not close the file.
+    # Explicit try/finally is used so Windows can release the database cleanly.
     connection = sqlite3.connect(database_path)
     try:
         connection.execute(CONTEXT_ITEMS_SCHEMA)
@@ -113,7 +130,12 @@ def get_connection(db_path: str | Path | None = None) -> sqlite3.Connection:
 def database_connection(
     db_path: str | Path | None = None,
 ) -> Iterator[sqlite3.Connection]:
-    """Yield a transaction-safe connection and always close it."""
+    """Yield a transaction-safe connection and always close it.
+
+    Fellows should prefer this helper for create, read, search, and manage
+    functions. A raised exception triggers rollback, so a half-finished write
+    is not left in local memory.
+    """
 
     connection = get_connection(db_path)
     try:
@@ -186,6 +208,8 @@ def normalize_tags(tags: str | Iterable[str] | None) -> str | None:
     if tags is None:
         return None
 
+    # SQLite stores the tags in one TEXT column, so both accepted input forms
+    # are normalized to the same comma-separated representation.
     if isinstance(tags, str):
         candidates = tags.split(",")
     elif isinstance(tags, Iterable):

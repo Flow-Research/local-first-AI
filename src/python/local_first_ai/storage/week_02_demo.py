@@ -39,6 +39,8 @@ class FellowAPIsNotReadyError(RuntimeError):
     """Raised when one or more fellow-owned modules have not landed yet."""
 
 
+# The demo depends on these public functions, not on internal implementation
+# details. Fellows are free to organize their own module behind this API.
 REQUIRED_APIS = {
     "local_first_ai.storage.create_context": ("create_context_item",),
     "local_first_ai.storage.read_context": (
@@ -64,6 +66,8 @@ def load_fellow_apis() -> dict[str, Callable[..., Any]]:
     loaded: dict[str, Callable[..., Any]] = {}
     missing: list[str] = []
 
+    # Importing at run time lets the base branch exist before the four fellow
+    # modules are merged. Missing functions are reported together at the end.
     for module_name, function_names in REQUIRED_APIS.items():
         try:
             module = importlib.import_module(module_name)
@@ -94,6 +98,8 @@ def load_fellow_apis() -> dict[str, Callable[..., Any]]:
 def _selected_database(db_path: str | Path | None):
     """Temporarily select a database for the demo and restore the environment."""
 
+    # The fellow APIs have simple signatures without db_path parameters. The
+    # shared environment setting lets the demo or tests redirect all of them.
     previous_path = os.environ.get(DATABASE_PATH_ENV)
     if db_path is not None:
         os.environ[DATABASE_PATH_ENV] = str(Path(db_path).resolve())
@@ -110,12 +116,16 @@ def _selected_database(db_path: str | Path | None):
 
 
 def _require_new_id(value: Any, operation: str) -> int:
+    """Fail early when create/write-back breaks the shared return contract."""
+
     if isinstance(value, bool) or not isinstance(value, int) or value <= 0:
         raise RuntimeError(f"{operation} must return the new positive integer ID")
     return value
 
 
 def _require_success(value: Any, operation: str) -> None:
+    """Turn a falsey manage result into a clear integration error."""
+
     if not value:
         raise RuntimeError(f"{operation} did not report success")
 
@@ -126,6 +136,7 @@ def run_demo(
 ) -> None:
     """Run the complete Week 2 scenario against the active SQLite database."""
 
+    # Resolve all four slices before writing anything to the database.
     apis = load_fellow_apis()
 
     create_context_item = apis["create_context_item"]
@@ -142,6 +153,7 @@ def run_demo(
         output("Week 2 Local Context Store Demo")
         output(f"Database: {database_path}")
 
+        # Fellow 1: capture two useful pieces of local context.
         output("\n[1] Creating context items...")
         decision_id = _require_new_id(
             create_context_item(
@@ -173,6 +185,7 @@ def run_demo(
         )
         output("Done.")
 
+        # Fellow 2: prove that stored memory can be listed and fetched.
         output("\n[2] Reading stored context...")
         items = list_context_items()
         if not isinstance(items, list) or len(items) < 2:
@@ -182,6 +195,7 @@ def run_demo(
         output(f"Found {len(items)} context item(s).")
         output("Done.")
 
+        # Fellow 3: retrieve only context relevant to the SQLite question.
         output("\n[3] Searching relevant context...")
         matches = search_context_items("SQLite")
         if not isinstance(matches, list) or not matches:
@@ -206,6 +220,7 @@ def run_demo(
         output(simulated_answer)
         output("Done.")
 
+        # Fellow 4: simulate controlled write-back after an LLM response.
         output("\n[6] Writing useful output back to local memory...")
         write_back_id = _require_new_id(
             write_back_context(
@@ -220,6 +235,7 @@ def run_demo(
             raise RuntimeError("The write-back item could not be read")
         output("Done.")
 
+        # Fellow 4 also proves that users can correct and remove local memory.
         output("\n[7] Updating and deleting context...")
         _require_success(
             update_context_item(
