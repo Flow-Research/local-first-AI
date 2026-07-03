@@ -7,13 +7,14 @@ Run from the repository root:
 Each fellow-owned test class is skipped only while its module does not exist.
 Once a fellow adds their module, that slice's tests become active. The shared
 database contract tests always run. The command prints only a three-line
-summary, then overwrites ``tests/python/storage/week_02_test_report.md`` with
-the full list of waiting files, failed test cases, and tracebacks.
+summary, then overwrites ``tests/python/storage/week_02_test_report.html`` with
+the full list of asserted cases, waiting files, failures, and tracebacks.
 """
 
 from __future__ import annotations
 
 import importlib
+import html
 import io
 import os
 import sqlite3
@@ -30,7 +31,7 @@ from unittest.mock import patch
 
 REPOSITORY_ROOT = Path(__file__).resolve().parents[3]
 PYTHON_SOURCE_ROOT = REPOSITORY_ROOT / "src" / "python"
-TEST_REPORT_PATH = Path(__file__).resolve().parent / "week_02_test_report.md"
+TEST_REPORT_PATH = Path(__file__).resolve().parent / "week_02_test_report.html"
 sys.path.insert(0, str(PYTHON_SOURCE_ROOT))
 
 from local_first_ai.storage import db_contract  # noqa: E402
@@ -536,159 +537,326 @@ class TestWeek02Demo(TemporaryContextDatabaseTestCase):
 
 
 class FellowFriendlyTestResult(unittest.TextTestResult):
-    """Named result type reserved for the fellow-friendly runner."""
+    """Remember the outcome of every asserted test case for the HTML table."""
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.case_results: list[dict[str, str | unittest.TestCase]] = []
 
-def write_markdown_report(
-    result: unittest.TestResult,
-    passed: int,
-) -> Path:
-    """Overwrite the Week 2 Markdown report with the latest test result."""
-
-    # unittest stores each problem as (test case, formatted traceback).
-    failures = list(result.failures)
-    errors = list(result.errors)
-    problems = failures + errors
-    problem_classes = {test.__class__.__name__ for test, _ in problems}
-    total_errors = len(errors) + len(MODULE_IMPORT_ERRORS)
-    successful = result.wasSuccessful() and not MODULE_IMPORT_ERRORS
-
-    if successful:
-        overall = (
-            "PASS - all available components passed. "
-            "Some fellow components are still waiting."
-            if result.skipped
-            else "PASS - the complete Week 2 Local Context Store passed."
+    def addSuccess(self, test):
+        super().addSuccess(test)
+        self.case_results.append(
+            {"test": test, "status": "PASS", "detail": "All assertions passed."}
         )
-    else:
-        overall = "FAIL - one or more implemented components need attention."
 
-    lines = [
-        "# Week 2 Local Context Store Test Report",
-        "",
-        f"> Generated: {datetime.now(timezone.utc).isoformat(timespec='seconds')}",
-        "> This file is overwritten every time the fellow-friendly test command runs.",
-        "",
-        "## Overall Result",
-        "",
-        f"**{overall}**",
-        "",
-        "## Test Summary",
-        "",
-        "| Result | Count |",
-        "|---|---:|",
-        f"| Passed | {passed} |",
-        f"| Waiting / skipped | {len(result.skipped)} |",
-        f"| Failed | {len(failures)} |",
-        f"| Errors | {total_errors} |",
-        "",
-        "## Component and File Status",
-        "",
-        "| Component | File to inspect | Status |",
-        "|---|---|---|",
-    ]
-
-    waiting_components: list[tuple[str, str, str]] = []
-    for label, test_class, file_path, available, module_name in COMPONENTS:
-        import_failed = module_name in MODULE_IMPORT_ERRORS
-        if import_failed:
-            status = "FAILING - module could not be imported"
-        elif not available:
-            file_exists = (REPOSITORY_ROOT / file_path).exists()
-            reason = (
-                "dependencies not added"
-                if file_exists
-                else "file not added"
-            )
-            status = f"WAITING - {reason}"
-            waiting_components.append((label, file_path, reason))
-        elif test_class in problem_classes:
-            status = "FAILING - see details below"
-        else:
-            status = "PASS"
-        lines.append(f"| {label} | `{file_path}` | {status} |")
-
-    lines.extend(["", "## Files Still Failing", ""])
-    if not problems and not MODULE_IMPORT_ERRORS:
-        lines.append("No implemented file is currently failing.")
-    else:
-        for module_name, traceback_text in MODULE_IMPORT_ERRORS.items():
-            file_path = next(
-                (
-                    component[2]
-                    for component in COMPONENTS
-                    if component[4] == module_name
-                ),
-                "Unknown file",
-            )
-            lines.extend(
-                [
-                    f"### IMPORT ERROR: `{file_path}`",
-                    "",
-                    f"- Module: `{module_name}`",
-                    "",
-                    "```text",
-                    traceback_text.rstrip(),
-                    "```",
-                    "",
-                ]
-            )
-
-        for test, traceback_text in problems:
-            test_class = test.__class__.__name__
-            file_path = next(
-                (
-                    component[2]
-                    for component in COMPONENTS
-                    if component[1] == test_class
-                ),
-                "Unknown file",
-            )
-            problem_kind = "FAILURE" if any(test is item[0] for item in failures) else "ERROR"
-            lines.extend(
-                [
-                    f"### {problem_kind}: `{file_path}`",
-                    "",
-                    f"- Test: `{test.id()}`",
-                    "",
-                    "```text",
-                    traceback_text.rstrip(),
-                    "```",
-                    "",
-                ]
-            )
-
-    lines.extend(["", "## Files Still Waiting", ""])
-    if not waiting_components:
-        lines.append("No files are waiting. All four fellow modules are present.")
-    else:
-        lines.append(
-            "These are not test failures. Their tests will activate when the "
-            "files are added:"
+    def addSkip(self, test, reason):
+        super().addSkip(test, reason)
+        self.case_results.append(
+            {"test": test, "status": "WAITING", "detail": reason}
         )
-        lines.append("")
-        for label, file_path, reason in waiting_components:
-            lines.append(f"- **{label}:** `{file_path}` ({reason})")
 
-    lines.extend(
-        [
-            "",
-            "## Run Again",
-            "",
-            "```bash",
-            "python tests/python/storage/test_week_02_local_context_store.py",
-            "```",
-            "",
-        ]
+    def addFailure(self, test, err):
+        detail = self._exc_info_to_string(err, test)
+        super().addFailure(test, err)
+        self.case_results.append(
+            {"test": test, "status": "FAIL", "detail": detail}
+        )
+
+    def addError(self, test, err):
+        detail = self._exc_info_to_string(err, test)
+        super().addError(test, err)
+        self.case_results.append(
+            {"test": test, "status": "ERROR", "detail": detail}
+        )
+
+
+def _component_for_test(test: unittest.TestCase) -> tuple:
+    test_class = test.__class__.__name__
+    return next(
+        (component for component in COMPONENTS if component[1] == test_class),
+        ("Unknown", test_class, "Unknown file", True, None),
     )
 
-    # write_text replaces the complete old report instead of appending to it.
-    TEST_REPORT_PATH.write_text("\n".join(lines), encoding="utf-8")
+
+def _assertion_description(test: unittest.TestCase) -> str:
+    """Turn a test method name into a short description fellows can scan."""
+
+    method_name = getattr(test, "_testMethodName", test.id().split(".")[-1])
+    return method_name.removeprefix("test_").replace("_", " ").capitalize()
+
+
+def _badge(status: str) -> str:
+    css_class = status.lower()
+    return f'<span class="badge {css_class}">{html.escape(status)}</span>'
+
+
+def write_html_report(
+    result: FellowFriendlyTestResult,
+    passed: int,
+) -> Path:
+    """Overwrite the Week 2 HTML report with test-case-level results."""
+
+    total_errors = len(result.errors) + len(MODULE_IMPORT_ERRORS)
+    successful = result.wasSuccessful() and not MODULE_IMPORT_ERRORS
+    overall_label = "PASS" if successful else "FAIL"
+    overall_message = (
+        "Every available component passed. Waiting tests will activate as "
+        "fellow files are added."
+        if successful and result.skipped
+        else (
+            "The complete Week 2 Local Context Store passed."
+            if successful
+            else "One or more implemented components need attention."
+        )
+    )
+
+    problem_classes = {
+        record["test"].__class__.__name__
+        for record in result.case_results
+        if record["status"] in {"FAIL", "ERROR"}
+    }
+
+    component_rows: list[str] = []
+    waiting_components: list[tuple[str, str, str]] = []
+    for label, test_class, file_path, available, module_name in COMPONENTS:
+        if module_name in MODULE_IMPORT_ERRORS:
+            status = "ERROR"
+            detail = "Module could not be imported"
+        elif not available:
+            file_exists = (REPOSITORY_ROOT / file_path).exists()
+            detail = "Dependencies not added" if file_exists else "File not added"
+            status = "WAITING"
+            waiting_components.append((label, file_path, detail))
+        elif test_class in problem_classes:
+            status = "FAIL"
+            detail = "See failing asserted cases"
+        else:
+            status = "PASS"
+            detail = "Available assertions passed"
+
+        component_rows.append(
+            "<tr>"
+            f"<td>{html.escape(label)}</td>"
+            f"<td><code>{html.escape(file_path)}</code></td>"
+            f"<td>{_badge(status)}</td>"
+            f"<td>{html.escape(detail)}</td>"
+            "</tr>"
+        )
+
+    case_rows: list[str] = []
+    failure_details: list[str] = []
+    for record in result.case_results:
+        test = record["test"]
+        status = str(record["status"])
+        detail = str(record["detail"])
+        label, _test_class, file_path, _available, _module_name = (
+            _component_for_test(test)
+        )
+        visible_detail = (
+            detail
+            if status in {"PASS", "WAITING"}
+            else "Open the failure details below."
+        )
+        case_rows.append(
+            "<tr>"
+            f"<td>{html.escape(str(label))}</td>"
+            f"<td><code>{html.escape(test.id().split('.')[-1])}</code></td>"
+            f"<td>{html.escape(_assertion_description(test))}</td>"
+            f"<td><code>{html.escape(str(file_path))}</code></td>"
+            f"<td>{_badge(status)}</td>"
+            f"<td>{html.escape(visible_detail)}</td>"
+            "</tr>"
+        )
+
+        if status in {"FAIL", "ERROR"}:
+            failure_details.append(
+                '<article class="failure-card">'
+                f"<h3>{_badge(status)} {html.escape(_assertion_description(test))}</h3>"
+                f"<p><strong>File:</strong> <code>{html.escape(str(file_path))}</code></p>"
+                f"<p><strong>Test:</strong> <code>{html.escape(test.id())}</code></p>"
+                f"<pre>{html.escape(detail)}</pre>"
+                "</article>"
+            )
+
+    for module_name, traceback_text in MODULE_IMPORT_ERRORS.items():
+        file_path = next(
+            (
+                component[2]
+                for component in COMPONENTS
+                if component[4] == module_name
+            ),
+            "Unknown file",
+        )
+        failure_details.append(
+            '<article class="failure-card">'
+            f"<h3>{_badge('ERROR')} Module import failed</h3>"
+            f"<p><strong>File:</strong> <code>{html.escape(file_path)}</code></p>"
+            f"<p><strong>Module:</strong> <code>{html.escape(module_name)}</code></p>"
+            f"<pre>{html.escape(traceback_text.rstrip())}</pre>"
+            "</article>"
+        )
+
+    waiting_items = "".join(
+        "<li>"
+        f"<strong>{html.escape(label)}</strong>"
+        f"<code>{html.escape(file_path)}</code>"
+        f"<span>{html.escape(reason)}</span>"
+        "</li>"
+        for label, file_path, reason in waiting_components
+    )
+    failure_html = "".join(failure_details) or (
+        '<div class="empty-state">No implemented test case is currently failing.</div>'
+    )
+
+    document = f"""<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Week 2 Local Context Store Test Report</title>
+  <style>
+    :root {{
+      color-scheme: light;
+      --ink: #172033;
+      --muted: #667085;
+      --line: #dce2ea;
+      --surface: #ffffff;
+      --canvas: #f4f7fb;
+      --pass: #087443;
+      --pass-bg: #dcfce7;
+      --wait: #9a5b08;
+      --wait-bg: #fff3cd;
+      --fail: #b42318;
+      --fail-bg: #fee4e2;
+      --error: #7a271a;
+      --error-bg: #fecdca;
+    }}
+    * {{ box-sizing: border-box; }}
+    body {{
+      margin: 0;
+      background: var(--canvas);
+      color: var(--ink);
+      font: 15px/1.55 Inter, ui-sans-serif, system-ui, -apple-system, sans-serif;
+    }}
+    main {{ max-width: 1180px; margin: 0 auto; padding: 48px 24px 72px; }}
+    header {{
+      background: linear-gradient(135deg, #172033, #34476b);
+      color: white;
+      padding: 32px;
+      border-radius: 18px;
+      box-shadow: 0 16px 40px rgba(23, 32, 51, .16);
+    }}
+    h1, h2, h3 {{ margin-top: 0; }}
+    header p {{ margin-bottom: 0; color: #dbe4f2; }}
+    section {{
+      margin-top: 24px;
+      padding: 26px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+    }}
+    .summary {{
+      display: grid;
+      grid-template-columns: repeat(4, minmax(130px, 1fr));
+      gap: 14px;
+    }}
+    .metric {{ padding: 18px; border: 1px solid var(--line); border-radius: 12px; }}
+    .metric strong {{ display: block; font-size: 28px; }}
+    .metric span {{ color: var(--muted); }}
+    .overall {{ display: flex; gap: 12px; align-items: center; margin-top: 18px; }}
+    .table-wrap {{ overflow-x: auto; }}
+    table {{ width: 100%; border-collapse: collapse; }}
+    th, td {{ padding: 12px 10px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }}
+    th {{ color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .04em; }}
+    code {{ font-family: "SFMono-Regular", Consolas, monospace; font-size: .9em; }}
+    .badge {{ display: inline-block; padding: 3px 9px; border-radius: 999px; font-size: 12px; font-weight: 750; }}
+    .badge.pass {{ color: var(--pass); background: var(--pass-bg); }}
+    .badge.waiting {{ color: var(--wait); background: var(--wait-bg); }}
+    .badge.fail {{ color: var(--fail); background: var(--fail-bg); }}
+    .badge.error {{ color: var(--error); background: var(--error-bg); }}
+    .failure-card {{ padding: 18px; border: 1px solid #fda29b; border-radius: 12px; margin-top: 14px; }}
+    pre {{ padding: 16px; background: #111827; color: #e5e7eb; border-radius: 10px; overflow: auto; white-space: pre-wrap; }}
+    .empty-state {{ padding: 18px; color: var(--pass); background: var(--pass-bg); border-radius: 10px; }}
+    .waiting-list {{ padding: 0; list-style: none; }}
+    .waiting-list li {{ display: grid; grid-template-columns: 220px 1fr auto; gap: 12px; padding: 11px 0; border-bottom: 1px solid var(--line); }}
+    .waiting-list span {{ color: var(--muted); }}
+    .run-command {{ display: inline-block; padding: 12px 16px; color: white; background: #172033; border-radius: 9px; }}
+    footer {{ margin-top: 22px; color: var(--muted); text-align: center; }}
+    @media (max-width: 760px) {{
+      main {{ padding: 22px 12px 40px; }}
+      .summary {{ grid-template-columns: repeat(2, 1fr); }}
+      .waiting-list li {{ grid-template-columns: 1fr; }}
+    }}
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>Week 2 Local Context Store</h1>
+    <p>Test report generated {html.escape(datetime.now(timezone.utc).isoformat(timespec="seconds"))}. This file is overwritten on every run.</p>
+  </header>
+
+  <section>
+    <h2>Result</h2>
+    <div class="summary">
+      <div class="metric"><strong>{passed}</strong><span>Passed</span></div>
+      <div class="metric"><strong>{len(result.skipped)}</strong><span>Waiting / skipped</span></div>
+      <div class="metric"><strong>{len(result.failures)}</strong><span>Failed</span></div>
+      <div class="metric"><strong>{total_errors}</strong><span>Errors</span></div>
+    </div>
+    <div class="overall">{_badge(overall_label)}<span>{html.escape(overall_message)}</span></div>
+  </section>
+
+  <section>
+    <h2>Component and File Status</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Component</th><th>File</th><th>Status</th><th>Meaning</th></tr></thead>
+        <tbody>{''.join(component_rows)}</tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>Asserted Test Cases</h2>
+    <p>Every row represents a test method and the behavior it asserts.</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Component</th><th>Test case</th><th>What is asserted</th><th>File</th><th>Status</th><th>Detail</th></tr></thead>
+        <tbody>{''.join(case_rows)}</tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>Failing Test Details</h2>
+    {failure_html}
+  </section>
+
+  <section>
+    <h2>Files Still Waiting</h2>
+    <p>Waiting items are not failures. Their assertions activate when the files or dependencies arrive.</p>
+    <ul class="waiting-list">{waiting_items or '<li>Nothing is waiting.</li>'}</ul>
+  </section>
+
+  <section>
+    <h2>Run Again</h2>
+    <code class="run-command">python tests/python/storage/test_week_02_local_context_store.py</code>
+  </section>
+
+  <footer>Month 1, Week 2 · Local-First AI</footer>
+</main>
+</body>
+</html>
+"""
+
+    # write_text replaces the old HTML report rather than appending to it.
+    TEST_REPORT_PATH.write_text(document, encoding="utf-8")
     return TEST_REPORT_PATH
 
 
 class FellowFriendlyTestRunner(unittest.TextTestRunner):
-    """Run quietly and write all detailed results to the Markdown report."""
+    """Run quietly and write all detailed results to the HTML report."""
 
     resultclass = FellowFriendlyTestResult
 
@@ -701,7 +869,7 @@ class FellowFriendlyTestRunner(unittest.TextTestRunner):
             - len(result.skipped)
             - len(result.expectedFailures)
         )
-        self.report_path = write_markdown_report(result, self.passed)
+        self.report_path = write_html_report(result, self.passed)
         return result
 
 
