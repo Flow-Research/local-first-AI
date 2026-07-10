@@ -2,7 +2,7 @@
 
 > Think of this report as the Week 2 checklist: what works, what is still waiting, and exactly what to fix.
 
-**Generated:** 2026-07-05T20:27:50+00:00
+**Generated:** 2026-07-09T11:33:12+00:00
 
 ## Where We Are
 
