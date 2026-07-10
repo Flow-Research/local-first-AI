@@ -2,14 +2,9 @@
 
 Add one block for every fellow who contributed. Keep each block short.
 
-## Fellow 1: Full Name
+## Fellow 3: John Tolulope Afariogun
 
-- **Topic:** Topic worked on
-- **What I did:** Describe the work you completed, the result you achieved, how you verified it, one challenge you addressed, and the main lesson you learned this week. Use at least 20 words.
-- **Public output:** [Post title](https://example.com/post) - Medium, X, LinkedIn, or another public platform
+- **Topic:** Search / Retrieve Context for Inference
+- **What I did:** I implemented the `search and prompt-preparation` APIs for the Local Context Store. It uses SQLite's `LIKE` operator to search across titles and content, pushes limits directly to the database, and orders results by importance and recency before formatting them into an LLM-ready text block. I verified it with the built-in timing demo script and learned that effective local-first AI memory relies just as much on efficiently ranking and structuring data as it does on finding keyword matches.
+- **Public output:** [Powering Local-First AI: Searching and Retrieving Context for Inference](https://dev.to/john_afariogun_e2351c78af/powering-local-first-ai-searching-and-retrieving-context-for-inference-3ohl)
 
-## Fellow 2: Full Name
-
-- **Topic:** Topic worked on
-- **What I did:** Describe the work you completed, the result you achieved, how you verified it, one challenge you addressed, and the main lesson you learned this week. Use at least 20 words.
-- **Public output:** [Post title](https://example.com/post) - Medium, X, LinkedIn, or another public platform
