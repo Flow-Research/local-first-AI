@@ -2,7 +2,7 @@
 
 > Think of this report as the Week 2 checklist: what works, what is still waiting, and exactly what to fix.
 
-**Generated:** 2026-07-03T05:47:06+00:00
+**Generated:** 2026-07-09T11:33:12+00:00
 
 ## Where We Are
 
@@ -12,7 +12,7 @@ The shared base works. The remaining checks are waiting for the four fellow-owne
 
 | Passed | Waiting | Failed | Errors |
 |---:|---:|---:|---:|
-| 4 | 19 | 0 | 0 |
+| 7 | 16 | 0 | 0 |
 
 ### What the labels mean
 
@@ -33,14 +33,14 @@ The shared base works. The remaining checks are waiting for the four fellow-owne
 - **PASS:** Schema contains the shared columns and indexes - All assertions passed. (`test_schema_contains_the_shared_columns_and_indexes`)
 - **PASS:** Shared validation helpers - All assertions passed. (`test_shared_validation_helpers`)
 
-### Fellow 1 - Create context - WAITING
+### Fellow 1 - Create context - PASS
 
 - **File:** `src/python/local_first_ai/storage/create_context.py`
-- **Status:** File not added.
+- **Status:** All available asserted cases passed.
 
-- **WAITING:** Create rejects empty title and content - Not active yet. (`test_create_rejects_empty_title_and_content`)
-- **WAITING:** Create rejects invalid context type - Not active yet. (`test_create_rejects_invalid_context_type`)
-- **WAITING:** Create returns unique IDs and stores complete items - Not active yet. (`test_create_returns_unique_ids_and_stores_complete_items`)
+- **PASS:** Create rejects empty title and content - All assertions passed. (`test_create_rejects_empty_title_and_content`)
+- **PASS:** Create rejects invalid context type - All assertions passed. (`test_create_rejects_invalid_context_type`)
+- **PASS:** Create returns unique IDs and stores complete items - All assertions passed. (`test_create_returns_unique_ids_and_stores_complete_items`)
 
 ### Fellow 2 - Read context - WAITING
 
@@ -90,7 +90,6 @@ No implemented test case is failing right now.
 
 These are the next pieces to build. They are not broken tests:
 
-- **Fellow 1 - Create context:** `src/python/local_first_ai/storage/create_context.py` - file not added.
 - **Fellow 2 - Read context:** `src/python/local_first_ai/storage/read_context.py` - file not added.
 - **Fellow 3 - Search context:** `src/python/local_first_ai/storage/search_context.py` - file not added.
 - **Fellow 4 - Manage context:** `src/python/local_first_ai/storage/manage_context.py` - file not added.
