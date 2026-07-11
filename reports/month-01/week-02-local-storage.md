@@ -7,6 +7,13 @@ Add one block for every fellow who contributed. Keep each block short.
 - **Topic:** Search / Retrieve Context for Inference
 - **What I did:** I implemented the `search and prompt-preparation` APIs for the Local Context Store. It uses SQLite's `LIKE` operator to search across titles and content, pushes limits directly to the database, and orders results by importance and recency before formatting them into an LLM-ready text block. I verified it with the built-in timing demo script and learned that effective local-first AI memory relies just as much on efficiently ranking and structuring data as it does on finding keyword matches.
 - **Public output:** [Powering Local-First AI: Searching and Retrieving Context for Inference](https://dev.to/john_afariogun_e2351c78af/powering-local-first-ai-searching-and-retrieving-context-for-inference-3ohl)
+
+## Fellow 2: Alain Chan
+
+- **Topic:** Read / Browse Context
+- **What I did:** I implemented the `read_context` APIs for the Local Context Store. The module can list all stored context items, fetch one item by ID, filter items by context type, and show recent context in newest-first order. I verified it with the Week 2 storage test script and learned that local-first memory must be easy to inspect before it can be trusted or used for inference.
+- **Public output:** [Making Local AI Memory Readable](https://dev.to/alaindevs/making-local-ai-memory-readable-1104)
+
 ## Fellow 1: Alain Chan
 
 - **Topic:** Capture / Create Context
