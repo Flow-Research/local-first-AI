@@ -24,4 +24,4 @@ Add one block for every fellow who contributed. Keep each block short.
 
 - **Topic:** Manage local context memory, persistence, and write-back for the Week 2 storage layer
 - **What I did:** Implemented `manage_context.py` to support updating existing context items, deleting items safely, proving the database can be reopened, and writing inference output back into local memory. Verified the API with the Week 2 manage tests, preserved `created_at` while refreshing `updated_at`, and kept the implementation aligned with the shared SQLite contract.
-- **Public output:** [Post title](https://dev.to/ogbonnia/building-a-local-first-ai-demo-what-should-an-ai-remember-3cb8) - dev.to
+- **Public output:** [Building a Local-First AI Demo: What Should an AI Remember?](https://dev.to/ogbonnia/building-a-local-first-ai-demo-what-should-an-ai-remember-3cb8) - dev.to
