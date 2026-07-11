@@ -20,3 +20,8 @@ Add one block for every fellow who contributed. Keep each block short.
 - **What I did:** I implemented the `create_context_item` API for the Local Context Store. It validates context type, title, content, source, tags, and importance before saving a new context item into SQLite. I verified it with the Week 2 storage test script and learned that useful local-first AI memory starts with clean, structured context capture.
 - **Public output:** [Why Local-First AI Starts With Good Context Capture](https://dev.to/alaindevs/why-local-first-ai-starts-with-good-context-capture-3d9g) - Dev.to
 
+## Fellow 4: Chibundu Ogbonnia
+
+- **Topic:** Manage local context memory, persistence, and write-back for the Week 2 storage layer
+- **What I did:** Implemented `manage_context.py` to support updating existing context items, deleting items safely, proving the database can be reopened, and writing inference output back into local memory. Verified the API with the Week 2 manage tests, preserved `created_at` while refreshing `updated_at`, and kept the implementation aligned with the shared SQLite contract.
+- **Public output:** [Post title](https://dev.to/ogbonnia/building-a-local-first-ai-demo-what-should-an-ai-remember-3cb8) - dev.to
