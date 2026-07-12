@@ -2,17 +2,17 @@
 
 > Think of this report as the Week 2 checklist: what works, what is still waiting, and exactly what to fix.
 
-**Generated:** 2026-07-11T23:28:44+00:00
+**Generated:** 2026-07-12T16:21:41+00:00
 
 ## Where We Are
 
 **Overall result: PASS**
 
-The shared base works. The remaining checks are waiting for the four fellow-owned files to be added.
+All Week 2 components and their asserted cases passed.
 
 | Passed | Waiting | Failed | Errors |
 |---:|---:|---:|---:|
-| 17 | 6 | 0 | 0 |
+| 23 | 0 | 0 | 0 |
 
 ### What the labels mean
 
@@ -64,23 +64,23 @@ The shared base works. The remaining checks are waiting for the four fellow-owne
 - **PASS:** Small local search completes promptly - All assertions passed. (`test_small_local_search_completes_promptly`)
 - **PASS:** Top context prioritizes importance - All assertions passed. (`test_top_context_prioritizes_importance`)
 
-### Fellow 4 - Manage context - WAITING
+### Fellow 4 - Manage context - PASS
 
 - **File:** `src/python/local_first_ai/storage/manage_context.py`
-- **Status:** File not added.
+- **Status:** All available asserted cases passed.
 
-- **WAITING:** Delete removes existing item - Not active yet. (`test_delete_removes_existing_item`)
-- **WAITING:** Prove persistence reopens the database - Not active yet. (`test_prove_persistence_reopens_the_database`)
-- **WAITING:** Update and delete missing ID do not crash - Not active yet. (`test_update_and_delete_missing_id_do_not_crash`)
-- **WAITING:** Update changes only requested fields and timestamp - Not active yet. (`test_update_changes_only_requested_fields_and_timestamp`)
-- **WAITING:** Write back creates inference output - Not active yet. (`test_write_back_creates_inference_output`)
+- **PASS:** Delete removes existing item - All assertions passed. (`test_delete_removes_existing_item`)
+- **PASS:** Prove persistence reopens the database - All assertions passed. (`test_prove_persistence_reopens_the_database`)
+- **PASS:** Update and delete missing ID do not crash - All assertions passed. (`test_update_and_delete_missing_id_do_not_crash`)
+- **PASS:** Update changes only requested fields and timestamp - All assertions passed. (`test_update_changes_only_requested_fields_and_timestamp`)
+- **PASS:** Write back creates inference output - All assertions passed. (`test_write_back_creates_inference_output`)
 
-### Week 2 integrated demo - WAITING
+### Week 2 integrated demo - PASS
 
 - **File:** `src/python/local_first_ai/storage/week_02_demo.py`
-- **Status:** Dependencies not added.
+- **Status:** All available asserted cases passed.
 
-- **WAITING:** Integrated demo completes - Not active yet. (`test_integrated_demo_completes`)
+- **PASS:** Integrated demo completes - All assertions passed. (`test_integrated_demo_completes`)
 
 ## Failing Asserted Cases
 
@@ -88,10 +88,7 @@ No implemented test case is failing right now.
 
 ## What Is Still Waiting
 
-These are the next pieces to build. They are not broken tests:
-
-- **Fellow 4 - Manage context:** `src/python/local_first_ai/storage/manage_context.py` - file not added.
-- **Week 2 integrated demo:** `src/python/local_first_ai/storage/week_02_demo.py` - dependencies not added.
+Nothing is waiting. All four fellow modules are present.
 
 ## What To Do Next
 
