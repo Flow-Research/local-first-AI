@@ -2,7 +2,7 @@
 
 > Think of this report as the Week 2 checklist: what works, what is still waiting, and exactly what to fix.
 
-**Generated:** 2026-07-09T11:33:12+00:00
+**Generated:** 2026-07-11T23:28:44+00:00
 
 ## Where We Are
 
@@ -12,7 +12,7 @@ The shared base works. The remaining checks are waiting for the four fellow-owne
 
 | Passed | Waiting | Failed | Errors |
 |---:|---:|---:|---:|
-| 7 | 16 | 0 | 0 |
+| 17 | 6 | 0 | 0 |
 
 ### What the labels mean
 
@@ -42,27 +42,27 @@ The shared base works. The remaining checks are waiting for the four fellow-owne
 - **PASS:** Create rejects invalid context type - All assertions passed. (`test_create_rejects_invalid_context_type`)
 - **PASS:** Create returns unique IDs and stores complete items - All assertions passed. (`test_create_returns_unique_ids_and_stores_complete_items`)
 
-### Fellow 2 - Read context - WAITING
+### Fellow 2 - Read context - PASS
 
 - **File:** `src/python/local_first_ai/storage/read_context.py`
-- **Status:** File not added.
+- **Status:** All available asserted cases passed.
 
-- **WAITING:** Empty database is clear and missing ID does not crash - Not active yet. (`test_empty_database_is_clear_and_missing_id_does_not_crash`)
-- **WAITING:** Filter by context type - Not active yet. (`test_filter_by_context_type`)
-- **WAITING:** List and get return complete items - Not active yet. (`test_list_and_get_return_complete_items`)
-- **WAITING:** Recent context respects limit and newest first - Not active yet. (`test_recent_context_respects_limit_and_newest_first`)
+- **PASS:** Empty database is clear and missing ID does not crash - All assertions passed. (`test_empty_database_is_clear_and_missing_id_does_not_crash`)
+- **PASS:** Filter by context type - All assertions passed. (`test_filter_by_context_type`)
+- **PASS:** List and get return complete items - All assertions passed. (`test_list_and_get_return_complete_items`)
+- **PASS:** Recent context respects limit and newest first - All assertions passed. (`test_recent_context_respects_limit_and_newest_first`)
 
-### Fellow 3 - Search context - WAITING
+### Fellow 3 - Search context - PASS
 
 - **File:** `src/python/local_first_ai/storage/search_context.py`
-- **Status:** File not added.
+- **Status:** All available asserted cases passed.
 
-- **WAITING:** Prepare context returns inference ready text - Not active yet. (`test_prepare_context_returns_inference_ready_text`)
-- **WAITING:** Search by type limits results - Not active yet. (`test_search_by_type_limits_results`)
-- **WAITING:** Search matches title and content case insensitively - Not active yet. (`test_search_matches_title_and_content_case_insensitively`)
-- **WAITING:** Search returns empty list for no match - Not active yet. (`test_search_returns_empty_list_for_no_match`)
-- **WAITING:** Small local search completes promptly - Not active yet. (`test_small_local_search_completes_promptly`)
-- **WAITING:** Top context prioritizes importance - Not active yet. (`test_top_context_prioritizes_importance`)
+- **PASS:** Prepare context returns inference ready text - All assertions passed. (`test_prepare_context_returns_inference_ready_text`)
+- **PASS:** Search by type limits results - All assertions passed. (`test_search_by_type_limits_results`)
+- **PASS:** Search matches title and content case insensitively - All assertions passed. (`test_search_matches_title_and_content_case_insensitively`)
+- **PASS:** Search returns empty list for no match - All assertions passed. (`test_search_returns_empty_list_for_no_match`)
+- **PASS:** Small local search completes promptly - All assertions passed. (`test_small_local_search_completes_promptly`)
+- **PASS:** Top context prioritizes importance - All assertions passed. (`test_top_context_prioritizes_importance`)
 
 ### Fellow 4 - Manage context - WAITING
 
@@ -90,8 +90,6 @@ No implemented test case is failing right now.
 
 These are the next pieces to build. They are not broken tests:
 
-- **Fellow 2 - Read context:** `src/python/local_first_ai/storage/read_context.py` - file not added.
-- **Fellow 3 - Search context:** `src/python/local_first_ai/storage/search_context.py` - file not added.
 - **Fellow 4 - Manage context:** `src/python/local_first_ai/storage/manage_context.py` - file not added.
 - **Week 2 integrated demo:** `src/python/local_first_ai/storage/week_02_demo.py` - dependencies not added.
 
