@@ -10,6 +10,8 @@ The repository is both the project workspace and the learning journal. Each week
 
 Current phase: Month 1 - Setup and Base Layer
 
+Week 2 work completed: the local storage and local-first workflow milestones are now documented and in place.
+
 ## Main Goal
 
 Build a simple local-first AI system that can work with local data before adding sync, benchmarking, and device-agent experiments.
