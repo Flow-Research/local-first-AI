@@ -1,2 +1,3 @@
 # Month 1 starts with the Python standard library.
-# Add dependencies here when the storage or AI workflow needs them.
+# OpenAI-compatible client for the local vmlx inference endpoint.
+openai>=2.11.0,<3
