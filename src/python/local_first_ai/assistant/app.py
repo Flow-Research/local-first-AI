@@ -20,7 +20,8 @@ Design notes (see project brief / MUST / MUST NOT list):
   even when the dependency is unavailable.
 * The storage backend, the model client, and the confirmation callback are all
   injectable, which keeps the whole flow offline-testable.
-* No MCP, LangChain, or ReAct. No streaming of tool-call deltas. No Ollama.
+* No MCP, LangChain, or ReAct. No Ollama. Streamed tool-call deltas are
+  accumulated but executed only after the stream completes.
 """
 
 from __future__ import annotations
