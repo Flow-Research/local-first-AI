@@ -308,7 +308,7 @@ The assistant tests use fake model clients. They prove the application flow with
 | Model portability | OpenAI-compatible endpoint is configurable | Verify tool-calling behavior for each supported model; API compatibility alone does not guarantee equal behavior |
 | Privacy | SQLite is local; endpoint location is configurable | Make the local-versus-remote endpoint boundary prominent in user guidance |
 | Week 4 reporting | Weekly report still has placeholders | Add the contributor summary, evidence, lesson, and public output |
-| Project status documentation | Root README still highlights Week 2 completion | Update the status after Week 4 scope is agreed and verified |
+| Project status documentation | README reflects Month 1 Week 4 cleanup and summary | Keep the status synchronized with the implementation review |
 
 ## What the next contributor should know
 
