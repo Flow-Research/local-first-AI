@@ -8,9 +8,14 @@ The repository is both the project workspace and the learning journal. Each week
 
 ## Project Status
 
-Current phase: Month 1 - Setup and Base Layer
+Current phase: Month 1 - Week 4 cleanup and summary
 
-Week 2 work completed: the local storage and local-first workflow milestones are now documented and in place.
+- Week 1 established the project structure, roadmap, architecture, and contribution workflow.
+- Week 2 added the SQLite local context store for creating, reading, searching, updating, and deleting user-owned context.
+- Week 3 connected the context store to a model-driven command-line assistant using a configurable OpenAI-compatible endpoint.
+- Week 4 added the Month 1 implementation review and simplified the pull-request template.
+
+The storage and assistant test suites currently pass 86 tests. Meaningful Month 1 benchmarking is still open; the existing benchmark runner remains a placeholder.
 
 ## Main Goal
 
@@ -31,6 +36,7 @@ Build a simple local-first AI system that can work with local data before adding
 | [Documentation Guide](docs/documentation-guide.md) | What belongs in README, docs, reports, research, and design folders |
 | [Architecture](docs/architecture.md) | Current system architecture |
 | [Decisions](docs/decisions.md) | Durable decisions and reasons |
+| [Month 1 Implementation Review](docs/monthly-reviews/month-01-implementation-review.md) | Week 1–4 story, current architecture, verification, and remaining work |
 
 ## Repository Flow
 
