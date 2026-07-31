@@ -1,34 +1,15 @@
-# Pull Request Checklist
-
-## Branch
-
-- [ ] My branch follows `fellows/<github-username>/month-XX-week-YY-<topic>`.
-- [ ] My branch was created from and targets the matching `weeks/month-XX-week-YY` branch.
-- [ ] This work is scoped to one feature, research task, design task, documentation task, experiment, or fix.
-
-## Human Learning
-
-- [ ] I can explain what changed without relying only on AI output.
-- [ ] I filled in my named block in the existing weekly report.
-- [ ] I included at least 20 words describing what I did.
-- [ ] I included my topic and public-output link.
-
-## Verification
-
-- [ ] I ran the relevant tests, script, benchmark, or manual check.
-- [ ] I recorded verification in benchmark results, screenshots, tests, command output, or notes.
-- [ ] I ran `scripts/verify-contribution.ps1`.
-
-## AI Use
-
-- [ ] I reviewed any AI-generated content before committing it.
-- [ ] I documented where AI helped if it influenced the work.
-- [ ] I made the final judgment as the human contributor.
+# Pull Request
 
 ## Summary
 
-What changed?
+Briefly describe what changed, what you learned, and anything the next contributor should know.
 
-What did you learn?
+## Verification
 
-What should the next contributor know?
+List the tests or checks you ran.
+
+## Checklist
+
+- [ ] I updated my section in the matching weekly report.
+- [ ] I reviewed the final changes and ran `scripts/verify-contribution.ps1`.
+- [ ] I confirmed that this branch uses the correct base branch and that the pull request targets the intended branch.
