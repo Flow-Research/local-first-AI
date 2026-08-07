@@ -729,7 +729,7 @@ sequenceDiagram
     participant Model as Local model
     participant Tool as execute_tool
     participant Confirm as cli_confirm
-    participant Create as Week 2 create_context
+    participant Storage as Week 2 create_context
     participant DB as SQLite
 
     User->>Session: Remember that ... port 8080
@@ -742,10 +742,10 @@ sequenceDiagram
     Confirm-->>User: request confirmation
     User-->>Confirm: approve
     Confirm-->>Tool: true
-    Tool->>Create: create context item
-    Create->>DB: INSERT row
-    DB-->>Create: new row ID
-    Create-->>Tool: integer ID
+    Tool->>Storage: create context item
+    Storage->>DB: INSERT row
+    DB-->>Storage: new row ID
+    Storage-->>Tool: integer ID
     Tool-->>Runner: created status and new item ID
     Runner->>Model: tool-result message
     Model-->>Runner: final saved confirmation
