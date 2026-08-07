@@ -725,30 +725,32 @@ The tested behavior is in [`test_remember_request_reaches_model_and_creates_note
 sequenceDiagram
     actor User
     participant Session as ChatSession
+    participant Runner as run_assistant_turn
     participant Model as Local model
-    participant Loop as run_assistant_turn
     participant Tool as execute_tool
     participant Confirm as cli_confirm
     participant Create as Week 2 create_context
     participant DB as SQLite
 
     User->>Session: Remember that ... port 8080
-    Session->>Model: message + tools
-    Model-->>Loop: create_context_item(arguments)
-    Loop->>Tool: name + JSON arguments
+    Session->>Runner: message + tools
+    Runner->>Model: message + tool definitions
+    Model-->>Runner: request create_context_item
+    Runner->>Tool: name + JSON arguments
     Tool->>Tool: allow-list, parse, validate
     Tool->>Confirm: show normalized proposed values
-    Confirm-->>User: Confirm this change? [y/N]
-    User-->>Confirm: y
+    Confirm-->>User: request confirmation
+    User-->>Confirm: approve
     Confirm-->>Tool: true
-    Tool->>Create: create_context_item(...)
+    Tool->>Create: create context item
     Create->>DB: INSERT row
     DB-->>Create: new row ID
     Create-->>Tool: integer ID
-    Tool-->>Loop: {"status":"created","id":...}
-    Loop->>Model: tool-result message
-    Model-->>Session: Saved it.
-    Session-->>User: assistant> Saved it.
+    Tool-->>Runner: created status and new item ID
+    Runner->>Model: tool-result message
+    Model-->>Runner: final saved confirmation
+    Runner-->>Session: final text
+    Session-->>User: display saved confirmation
 ```
 
 ### The write safety gate
