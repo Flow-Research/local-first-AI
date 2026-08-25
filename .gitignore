@@ -22,3 +22,6 @@ cmake-build-*/
 # Rust build outputs
 target/
 Cargo.lock
+
+.omo
+opencode.jsonc
