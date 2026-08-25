@@ -2,7 +2,7 @@
 
 This module is the single production entry point that wires the Month 1, Week 2
 SQLite context store (``local_first_ai.storage``) to a local, OpenAI-compatible
-inference endpoint (the vmlx server).
+inference endpoint selected at startup (llama.cpp, Ollama, or a custom server).
 
 It uses a *model-first* design. Every non-help/exit user message is sent to the
 model together with the native tool set, and the model itself decides whether to
@@ -20,7 +20,7 @@ Design notes (see project brief / MUST / MUST NOT list):
   even when the dependency is unavailable.
 * The storage backend, the model client, and the confirmation callback are all
   injectable, which keeps the whole flow offline-testable.
-* No MCP, LangChain, or ReAct. No Ollama. Streamed tool-call deltas are
+* No MCP, LangChain, or ReAct. Streamed tool-call deltas are
   accumulated but executed only after the stream completes.
 """
 
@@ -1052,22 +1052,7 @@ def _stream_from_env() -> bool:
 def build_parser() -> argparse.ArgumentParser:
     _load_dotenv()
     parser = argparse.ArgumentParser(
-        description="Week 3 local-first AI chat assistant (OpenAI-compatible)."
-    )
-    parser.add_argument(
-        "--base-url",
-        default=os.getenv("OPENAI_BASE_URL"),
-        help="OpenAI-compatible base URL (or set OPENAI_BASE_URL in .env).",
-    )
-    parser.add_argument(
-        "--model",
-        default=os.getenv("OPENAI_MODEL"),
-        help="Model name served by the endpoint (or set OPENAI_MODEL in .env).",
-    )
-    parser.add_argument(
-        "--api-key",
-        default=os.getenv("OPENAI_API_KEY"),
-        help="API key (or set OPENAI_API_KEY in .env; local servers often use any string).",
+        description="Local-first AI chat assistant with selectable inference."
     )
     parser.add_argument(
         "--no-stream",
@@ -1078,6 +1063,37 @@ def build_parser() -> argparse.ArgumentParser:
         "--db-path",
         default=os.getenv("LOCAL_CONTEXT_DB_PATH"),
         help="Optional explicit SQLite database path.",
+    )
+    parser.add_argument(
+        "--runtime-dir",
+        default=os.getenv("LOCAL_FIRST_AI_RUNTIME_DIR"),
+        help="Directory for the managed llama.cpp binary and GGUF models.",
+    )
+    parser.add_argument(
+        "--engine",
+        choices=("llama", "ollama", "custom"),
+        default=os.getenv("LOCAL_FIRST_AI_ENGINE"),
+        help="Inference engine. Omit to choose interactively.",
+    )
+    parser.add_argument(
+        "--model",
+        default=os.getenv("OPENAI_MODEL"),
+        help="Existing model path/name; omit to choose interactively.",
+    )
+    parser.add_argument(
+        "--model-url",
+        default=os.getenv("LOCAL_FIRST_AI_MODEL_URL"),
+        help="GGUF URL used with --engine llama when --model is not local.",
+    )
+    parser.add_argument(
+        "--base-url",
+        default=os.getenv("OPENAI_BASE_URL"),
+        help="OpenAI-compatible URL used with --engine custom.",
+    )
+    parser.add_argument(
+        "--api-key",
+        default=os.getenv("OPENAI_API_KEY"),
+        help="API key used with --engine custom.",
     )
     return parser
 
@@ -1135,8 +1151,26 @@ def main(argv: list[str] | None = None) -> int:
     if args.db_path:
         os.environ[db_contract.DATABASE_PATH_ENV] = str(Path(args.db_path).resolve())
 
-    config = resolve_runtime_config(
-        args,
+    from local_first_ai.assistant.inference_runtime import prepare_inference_runtime
+    from local_first_ai.assistant.llama_runtime import RuntimeSetupError
+
+    try:
+        runtime = prepare_inference_runtime(
+            engine=args.engine,
+            runtime_dir=Path(args.runtime_dir) if args.runtime_dir else None,
+            model=args.model,
+            model_url=args.model_url,
+            base_url=args.base_url,
+            api_key=args.api_key,
+        )
+    except RuntimeSetupError as exc:
+        print(f"Could not prepare local inference: {exc}", file=sys.stderr)
+        return 1
+
+    config = Config(
+        base_url=runtime.base_url,
+        model=runtime.model,
+        api_key=runtime.api_key,
         stream=(not args.no_stream) and _stream_from_env(),
     )
     client = make_client(config)
@@ -1152,14 +1186,17 @@ def main(argv: list[str] | None = None) -> int:
     print(WELCOME)
     print("Type 'help' for usage or 'exit' to quit.\n")
 
-    while True:
-        try:
-            user_input = input("you> ")
-        except EOFError:
-            print("\nGoodbye.")
-            break
-        if session.handle(user_input) == "exit":
-            break
+    try:
+        while True:
+            try:
+                user_input = input("you> ")
+            except EOFError:
+                print("\nGoodbye.")
+                break
+            if session.handle(user_input) == "exit":
+                break
+    finally:
+        runtime.stop()
 
     return 0
 
