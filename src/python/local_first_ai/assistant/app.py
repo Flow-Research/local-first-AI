@@ -723,6 +723,7 @@ def _obtain_response(
     messages: list[dict[str, Any]],
     stream: bool,
     on_token: Callable[[str], None] | None = None,
+    tool_choice: str = "auto",
 ) -> tuple[str, list[dict[str, Any]], str | None, Exception | None, bool, bool]:
     """Fetch one model response in either mode and normalize it.
 
@@ -737,7 +738,7 @@ def _obtain_response(
             model=model,
             messages=messages,
             tools=TOOLS,
-            tool_choice="auto",
+            tool_choice=tool_choice,
             temperature=0.1,
             stream=stream,
         )
@@ -752,6 +753,35 @@ def _obtain_response(
         return _accumulate_stream(iterable, on_token)
 
     return _as_non_stream(response)
+
+
+def _required_tool_family(messages: list[dict[str, Any]]) -> frozenset[str] | None:
+    user_messages = [
+        str(message.get("content", ""))
+        for message in messages
+        if message.get("role") == "user"
+    ]
+    if not user_messages:
+        return None
+    text = user_messages[-1].strip().lower()
+    if not text or re.search(r"\b(save me a seat|save me)\b", text):
+        return None
+
+    read_terms = (
+        r"\b(stored data|stored|notes?|locally|local context|"
+        r"what .*stored|items exist|topic|keyword|decid(?:e|ed|ion)|"
+        r"what .*know)\b"
+    )
+    list_store_request = r"\b(list|show)\b.*\b(store|stored|items|context)\b"
+    write_terms = r"\b(remember|save|store|record|change|delete|update)\b"
+    if re.search(write_terms, text) and (
+        re.search(r"\b(this|that|it|note|content|data|item|context)\b", text)
+        or re.search(r"\b(remember|record|change|delete|update)\b", text)
+    ):
+        return WRITE_TOOLS
+    if re.search(read_terms, text) or re.search(list_store_request, text):
+        return READ_TOOLS
+    return None
 
 
 # --------------------------------------------------------------------------- #
@@ -776,9 +806,18 @@ def run_assistant_turn(
     """
 
     completed_writes: dict[str, str] = {}
-    for _ in range(max_iterations):
+    required_family = _required_tool_family(messages)
+    repair_attempted = False
+    structured_call_seen = False
+    for iteration in range(max_iterations):
+        first_required_stream = bool(required_family and iteration == 0 and stream)
+        repaired_response = False
         content, tool_calls, finish_reason, error, leaked, emitted = _obtain_response(
-            client, model, messages, stream, on_token
+            client,
+            model,
+            messages,
+            stream,
+            None if first_required_stream else on_token,
         )
         if error is not None:
             # Initial stream request failed: retry once with stream disabled.
@@ -795,7 +834,9 @@ def run_assistant_turn(
         # streamed, do not duplicate it via a retry; report a clear error.
         # Otherwise (tool-only, no visible text) retry non-stream before any
         # side effect occurs.
-        if finish_reason is None:
+        if finish_reason is None and not (
+            required_family and not structured_call_seen and not repair_attempted
+        ):
             if emitted:
                 return None, RuntimeError("stream ended before finish_reason")
             content, tool_calls, finish_reason, error, leaked, emitted = (
@@ -807,13 +848,35 @@ def run_assistant_turn(
         # Leaked raw tool markup with no structured calls: retry non-stream so
         # the model can return proper tool calls or clean text. Preceding text
         # may already have streamed, but the marker itself was never emitted.
+        if tool_calls:
+            structured_call_seen = True
+
+        if required_family and not structured_call_seen and not repair_attempted:
+            repair_attempted = True
+            content, tool_calls, finish_reason, error, leaked, emitted = _obtain_response(
+                client,
+                model,
+                messages,
+                False,
+                None,
+                tool_choice="required",
+            )
+            repaired_response = True
+            if error is not None:
+                return None, error
+            if not tool_calls or any(
+                tool_call.get("function", {}).get("name") not in required_family
+                for tool_call in tool_calls
+            ):
+                return None, RuntimeError("required tool recovery returned wrong tool")
+            structured_call_seen = True
+
         if not tool_calls and leaked:
             content, tool_calls, finish_reason, error, leaked, emitted = (
                 _obtain_response(client, model, messages, False, on_token)
             )
             if error is not None:
                 return None, error
-            # Emit the recovered (clean) answer only when nothing was streamed.
             if not emitted and on_token is not None:
                 on_token(content)
             return content or "", None
@@ -823,7 +886,7 @@ def run_assistant_turn(
             # stream; nothing further to print here (non-stream emits later).
             return content or "", None
 
-        if content and finish_reason != "tool_calls":
+        if content and finish_reason != "tool_calls" and not repaired_response:
             return content, None
 
         # Execute complete tool calls only after stream completion.

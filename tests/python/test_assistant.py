@@ -350,6 +350,165 @@ class TestModelFirstRouting(AssistantTestCase):
         # An empty search result carries no row content.
         self.assertIn('"count": 0', tool_messages[0]["content"])
 
+    def test_required_read_is_repaired_once_when_auto_omits_tool(self):
+        self.seed(title="Stored item")
+        client = FakeClient(
+            responses=[
+                _response(content="I cannot access that."),
+                _response(
+                    tool_calls=[_tool_call("repair", "list_context_items", "{}")]
+                ),
+                _response(content="You have one stored item."),
+            ]
+        )
+        session = self.new_session(client=client, stream=False)
+
+        answer = session.handle("What is stored?")
+
+        self.assertEqual(answer, "You have one stored item.")
+        self.assertEqual(len(client.calls), 3)
+        self.assertEqual(client.calls[0]["tool_choice"], "auto")
+        self.assertEqual(client.calls[1]["tool_choice"], "required")
+        self.assertEqual(client.calls[2]["tool_choice"], "auto")
+        self.assertEqual(len(self.storage.list_context_items()), 1)
+
+    def test_required_write_is_repaired_once_without_duplicate_mutation(self):
+        client = FakeClient(
+            responses=[
+                _response(content="I will remember that."),
+                _response(
+                    tool_calls=[
+                        _tool_call(
+                            "repair",
+                            "create_context_item",
+                            json.dumps(
+                                {
+                                    "context_type": "user_note",
+                                    "title": "Offline choice",
+                                    "content": "Use SQLite.",
+                                }
+                            ),
+                        )
+                    ]
+                ),
+                _response(content="Remembered."),
+            ]
+        )
+        session = self.new_session(client=client, confirm=self.allow, stream=False)
+
+        answer = session.handle("Remember that we use SQLite.")
+
+        self.assertEqual(answer, "Remembered.")
+        self.assertEqual(len(client.calls), 3)
+        self.assertEqual(client.calls[1]["tool_choice"], "required")
+        self.assertEqual(len(self.storage.list_context_items()), 1)
+
+    def test_required_tool_repair_fails_closed_for_missing_or_wrong_family(self):
+        for response in (
+            _response(content="No tool."),
+            _response(
+                tool_calls=[
+                    _tool_call(
+                        "wrong",
+                        "create_context_item",
+                        json.dumps(
+                            {
+                                "context_type": "user_note",
+                                "title": "Wrong",
+                                "content": "Must not persist.",
+                            }
+                        ),
+                    )
+                ]
+            ),
+        ):
+            with self.subTest(response=response):
+                client = FakeClient(
+                    responses=[_response(content="Skipped."), response]
+                )
+                messages = [
+                    {"role": "system", "content": assistant.SYSTEM_PROMPT},
+                    {"role": "user", "content": "What is stored?"},
+                ]
+
+                final, error = assistant.run_assistant_turn(
+                    client,
+                    "test-model",
+                    messages,
+                    self.storage,
+                    self.allow,
+                    stream=False,
+                )
+
+                self.assertIsNone(final)
+                self.assertIsInstance(error, RuntimeError)
+                self.assertEqual(len(client.calls), 2)
+                self.assertEqual(len(self.storage.list_context_items()), 0)
+
+    def test_final_answer_after_tool_execution_is_not_repaired(self):
+        self.seed(title="Stored item")
+        client = FakeClient(
+            responses=[
+                _response(
+                    tool_calls=[_tool_call("read", "list_context_items", "{}")]
+                ),
+                _response(content="There is one item."),
+            ]
+        )
+        session = self.new_session(client=client, stream=False)
+
+        answer = session.handle("List stored items.")
+
+        self.assertEqual(answer, "There is one item.")
+        self.assertEqual(len(client.calls), 2)
+        self.assertTrue(all(call["tool_choice"] == "auto" for call in client.calls))
+
+    def test_greeting_and_unrelated_save_phrase_remain_auto_only(self):
+        for prompt in ("Hello there.", "Save me a seat for tomorrow."):
+            with self.subTest(prompt=prompt):
+                client = FakeClient(responses=[_response(content="Okay.")])
+                session = self.new_session(client=client, stream=False)
+
+                self.assertEqual(session.handle(prompt), "Okay.")
+                self.assertEqual(len(client.calls), 1)
+                self.assertEqual(client.calls[0]["tool_choice"], "auto")
+
+    def test_explicit_local_note_queries_repair_read_once(self):
+        prompts = (
+            "Find notes about SQLite.",
+            "What do you know locally about SQLite?",
+            "What did we decide about SQLite?",
+            "What local context do we have about SQLite?",
+        )
+        for prompt in prompts:
+            with self.subTest(prompt=prompt):
+                client = FakeClient(
+                    responses=[
+                        _response(content="I do not know."),
+                        _response(
+                            tool_calls=[
+                                _tool_call("repair", "search_context_items", '{"keyword":"sqlite"}')
+                            ]
+                        ),
+                        _response(content="SQLite is in local context."),
+                    ]
+                )
+                session = self.new_session(client=client, stream=False)
+
+                self.assertEqual(
+                    session.handle(prompt), "SQLite is in local context."
+                )
+                self.assertEqual(len(client.calls), 3)
+                self.assertEqual(client.calls[1]["tool_choice"], "required")
+
+    def test_retail_store_question_remains_auto_only(self):
+        client = FakeClient(responses=[_response(content="A retail answer.")])
+        session = self.new_session(client=client, stream=False)
+
+        self.assertEqual(session.handle("What store sells shoes?"), "A retail answer.")
+        self.assertEqual(len(client.calls), 1)
+        self.assertEqual(client.calls[0]["tool_choice"], "auto")
+
 
 # --------------------------------------------------------------------------- #
 # 3. CRUD through the public execute_tool entry point
@@ -963,6 +1122,37 @@ class TestStreamAccumulator(unittest.TestCase):
 
 
 class TestStreamingTurns(AssistantTestCase):
+    def test_required_stream_recovery_discards_ungrounded_first_text(self):
+        self.seed(title="Stored item")
+        first_chunks = [
+            _stream_chunk(content="Ungrounded first answer."),
+            _stream_chunk(finish_reason="stop"),
+        ]
+        repaired = _response(
+            tool_calls=[_tool_call("repair", "list_context_items", "{}")]
+        )
+        final_chunks = [
+            _stream_chunk(content="Grounded answer."),
+            _stream_chunk(finish_reason="stop"),
+        ]
+        client = FakeStreamClient(
+            stream_responses=[first_chunks, final_chunks],
+            non_stream_responses=[repaired],
+        )
+        session = self.new_session(client=client, stream=True)
+        output = io.StringIO()
+
+        with contextlib.redirect_stdout(output):
+            answer = session.handle("What is stored?")
+
+        self.assertEqual(answer, "Grounded answer.")
+        self.assertEqual(output.getvalue(), "assistant> Grounded answer.\n")
+        self.assertEqual(len(client.calls), 3)
+        self.assertEqual(client.calls[0]["tool_choice"], "auto")
+        self.assertEqual(client.calls[1]["tool_choice"], "required")
+        self.assertEqual(client.calls[1]["stream"], False)
+        self.assertEqual(client.calls[2]["tool_choice"], "auto")
+
     def test_visible_answer_with_stop_finish_tool_is_returned_once(self):
         chunks = [
             _stream_chunk(content="The store has one item."),
